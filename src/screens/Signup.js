@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { theme } from "../services/common/theme";
 import Button from "../components/Button";
-const SignupImg1 = require("../../assets/SignupImg1.png");
-const SignupImg2 = require("../../assets/SignupImg2.png");
-const SignupImg3 = require("../../assets/SignupImg3.png");
-const InnerCityLogo = require("../../assets/InnerCityLogo.png");
+import SimpleTextField from "../components/SimpleTextField";
+import CheckBox from "../components/CheckBox";
+import { ScrollView } from "react-native-gesture-handler";
 
-const Signup = () => {
+const SignupImg1 = require("../../assets/images/SignupImg1.png");
+const SignupImg2 = require("../../assets/images/SignupImg2.png");
+const SignupImg3 = require("../../assets/images/SignupImg3.png");
+const InnerCityLogo = require("../../assets/images/InnerCityLogo.png");
+
+const Signup = ({ navigation }) => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [enableSupport, setEnableSupport] = useState(false);
+  const [agreeTAC, setAgreeTAC] = useState(false);
+
   return (
     <View style={styles.container}>
       <Image
@@ -31,12 +43,93 @@ const Signup = () => {
         style={styles.innerCityLogo}
       />
 
-      <Text style={styles.welcomeText}>Welcome!</Text>
+      <View style={styles.innerContainer}>
+        <Text style={styles.welcomeText}>Welcome!</Text>
 
-      <Text style={styles.signupText}>
-        Sign up to join
-        <Text style={styles.innerCityText}> INNER CITY</Text>
-      </Text>
+        <Text style={styles.signupText}>
+          Sign up to join
+          <Text style={styles.innerCityText}> INNER CITY</Text>
+        </Text>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.fieldsContentContainer}
+        >
+          <View style={styles.fieldsContainer}>
+            <SimpleTextField
+              value={firstName}
+              label="First Name"
+              placeholder="Your First Name"
+              onChangeText={(val) => setFirstName(val)}
+            />
+            <SimpleTextField
+              value={lastName}
+              label="First Last"
+              placeholder="Your Last Name"
+              onChangeText={(val) => setLastName(val)}
+            />
+            <SimpleTextField
+              value={email}
+              label="Email"
+              placeholder="Your Email"
+              onChangeText={(val) => setEmail(val)}
+            />
+            <SimpleTextField
+              secureTextEntry
+              value={password}
+              label="Password"
+              placeholder="Password"
+              onChangeText={(val) => setPassword(val)}
+            />
+          </View>
+          <View style={styles.actionsContainer}>
+            <CheckBox
+              size={22}
+              fontSize={14}
+              isChecked={enableSupport}
+              textColor={theme.COLORS.WHITE}
+              onChange={() =>
+                setEnableSupport((enableSupport) => !enableSupport)
+              }
+            >
+              <Text style={styles.enableSupportText}>
+                Sign me up for the Support America newsletter
+              </Text>
+            </CheckBox>
+            <CheckBox
+              size={22}
+              fontSize={14}
+              isChecked={agreeTAC}
+              textColor={theme.COLORS.WHITE}
+              onChange={() => setAgreeTAC((agreeTAC) => !agreeTAC)}
+            >
+              <Text style={styles.agreeTACText}>
+                {`I agree to the `}
+                <Text style={styles.tOUNPPText}>Terms of Use</Text>
+                {` and have read and understand the `}
+                <Text style={styles.tOUNPPText}>Privacy Policy</Text>
+              </Text>
+            </CheckBox>
+            <Button
+              height={40}
+              onPress={() => {}}
+              title="Create an Account"
+              color={theme.COLORS.TANGO}
+              buttonStyle={styles.button}
+              textStyle={styles.buttonText}
+            />
+            <Text style={styles.alreadyAccountText}>
+              Already have an account?
+              <Text
+                style={styles.signInText}
+                onPress={() => navigation.navigate("Signin")}
+              >
+                {` Sign In`}
+              </Text>
+            </Text>
+          </View>
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -79,74 +172,74 @@ export const styles = StyleSheet.create({
     marginTop: 40,
     alignSelf: "center",
   },
+  innerContainer: {
+    paddingHorizontal: 31,
+  },
   welcomeText: {
     fontSize: 24,
     marginTop: 11,
     lineHeight: 24,
     textAlign: "center",
-    // fontFamily: "Moon-Bold",
     color: theme.COLORS.WHITE,
+    fontFamily: "InterMedium500",
   },
   signupText: {
     marginTop: 11,
     fontSize: 16,
     lineHeight: 28,
     textAlign: "center",
-    // fontFamily: "Moon-Bold",
     color: theme.COLORS.WHITE,
+    fontFamily: "InterRegular400",
   },
   innerCityText: {
-    fontWeight: "bold",
     color: theme.COLORS.TANGO,
+    fontFamily: "InterBold700",
   },
-
-  welcomeImage: {
-    width: "100%",
-    height: "50%",
+  fieldsContainer: {
+    marginVertical: 16,
   },
-  bottomContainer: {
-    paddingTop: 3,
-    paddingHorizontal: 31,
+  fieldsContentContainer: {
+    paddingBottom: "70%",
   },
-
-  welcomeSubText: {
+  enableSupportText: {
     fontSize: 16,
-    marginTop: 16,
-    lineHeight: 24,
-    // fontFamily: "Moon-Bold",
+    lineHeight: 22,
     color: theme.COLORS.WHITE,
+    fontFamily: "InterMedium500",
   },
-  buttonsContainer: {
-    marginVertical: 26,
+  agreeTACText: {
+    flex: 1,
+    fontSize: 16,
+    lineHeight: 22,
+    color: theme.COLORS.WHITE,
+    fontFamily: "InterMedium500",
+  },
+  tOUNPPText: {
+    fontFamily: "InterBold700",
+    textDecorationLine: "underline",
   },
   button: {
-    // margin: 10,
+    marginTop: 30,
     borderRadius: 15,
   },
   buttonText: {
     fontSize: 16,
     lineHeight: 24,
     textAlign: "center",
-    // fontFamily: "Moon-Bold",
-    // textTransform: "uppercase",
     color: theme.COLORS.WHITE,
+    fontFamily: "InterMedium500",
   },
-  buttonIcon: {
-    height: 24,
-    width: 23,
-  },
-  agreeText: {
-    fontSize: 14, //14
-    // marginTop: 16,
-    lineHeight: 24,
-    // fontFamily: "Moon-Bold",
+  alreadyAccountText: {
+    fontSize: 16,
+    marginTop: 11,
+    lineHeight: 28,
+    textAlign: "center",
     color: theme.COLORS.WHITE,
+    fontFamily: "InterMedium500",
   },
-  termsNConditionsText: {
-    fontSize: 14, //14
-    lineHeight: 24,
-    fontWeight: "bold",
-    color: theme.COLORS.WHITE,
-    // fontFamily: "Moon-Bold",
+  signInText: {
+    color: theme.COLORS.TANGO,
+    fontFamily: "InterBold700",
+    textDecorationLine: "underline",
   },
 });

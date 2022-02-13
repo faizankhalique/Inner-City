@@ -40,7 +40,7 @@ const Button = (props) => {
             height: height,
             justifyContent: "center",
             alignItems: "center",
-            paddingVertical: 10,
+            // paddingVertical: 10,
             paddingHorizontal: 10,
             borderRadius: buttonStyle.borderRadius
               ? buttonStyle.borderRadius
@@ -90,7 +90,7 @@ const Button = (props) => {
 };
 
 Button.propTypes = {
-  icon: PropTypes.string,
+  icon: PropTypes.any,
   title: PropTypes.string,
   onPress: PropTypes.func,
   loading: PropTypes.bool,
