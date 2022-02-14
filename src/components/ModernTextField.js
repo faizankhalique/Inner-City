@@ -8,16 +8,16 @@ import {
 } from "react-native";
 import { theme } from "../services/common/theme";
 
-const SimpleTextField = ({
+const ModernTextField = ({
   placeholder = "",
   value = "",
-  label = "",
   onChangeText = () => {},
+  icon = null,
   ...props
 }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <View style={styles.iconContainer}>{icon}</View>
       <TI
         value={value}
         placeholder={placeholder}
@@ -30,37 +30,34 @@ const SimpleTextField = ({
   );
 };
 
-export default SimpleTextField;
+export default ModernTextField;
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 16,
+    height: 50,
+    marginTop: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  label: {
-    fontSize: 14,
-    color: theme.COLORS.WHITE,
-    textTransform: "uppercase",
-    fontFamily: "InterBold700",
+  iconContainer: {
+    width: "20%",
+    height: "100%",
+    alignItems: "center",
+    borderTopLeftRadius: 8,
+    justifyContent: "center",
+    borderBottomLeftRadius: 8,
+    backgroundColor: theme.COLORS.TANGO,
   },
   inputSingleline: {
-    marginTop: 14,
+    width: "80%",
     fontSize: 14,
-    color: theme.COLORS.BLACK,
-    height: 50,
-    backgroundColor: theme.COLORS.WHITE,
-    borderRadius: 8,
-    paddingVertical: 12,
+    height: "100%",
     paddingHorizontal: 15,
-  },
-  inputMultiline: {
-    padding: 0,
-    fontSize: 11,
-    minHeight: 95,
-    maxHeight: 95,
-    marginTop: 10,
-    lineHeight: 16,
-    textAlignVertical: "top",
-    color: theme.COLORS.WHITE,
+    borderTopRightRadius: 8,
+    color: theme.COLORS.BLACK,
+    borderBottomRightRadius: 8,
     fontFamily: "InterRegular400",
+    backgroundColor: theme.COLORS.WHITE,
   },
 });

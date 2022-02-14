@@ -14,7 +14,9 @@ const SignupNavigation = () => {
   return (
     <Tab.Navigator
       tabBar={() => (
-        <View style={styles.container}>
+        <View
+          style={activeTab === 2 ? styles.containerSignin : styles.container}
+        >
           {Array.from(Array(3).keys()).map((_, tabIndex) => (
             <View
               key={tabIndex}
@@ -49,6 +51,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+  },
+  containerSignin: {
+    opacity: 0.8,
+    paddingTop: 10,
+    paddingBottom: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: theme.COLORS.BLACK_PEARL,
   },
   dot: {
     width: 10,

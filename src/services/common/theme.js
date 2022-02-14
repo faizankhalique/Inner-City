@@ -13,6 +13,8 @@ export const theme = {
     SILVER: "#CDCDCD",
     EQUATOR: "#E1BC5C",
     OCHRE: "#DB702A",
+    BISCAY: "#1C3676",
+    BLACK_PEARL: "#030714",
 
     TULIP_TREE: "#EBB13D",
     WELL_READ: "#B73930",
