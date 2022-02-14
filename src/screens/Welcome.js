@@ -2,9 +2,9 @@ import React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
 import { theme } from "../services/common/theme";
 import Button from "../components/Button";
-const WelcomeImage = require("../../assets/Welcome.png");
-const GoogleIcon = require("../../assets/Google.png");
-const FacebookIcon = require("../../assets/Facebook.png");
+const WelcomeImage = require("../../assets/images/Welcome.png");
+const GoogleIcon = require("../../assets/icons/Google.png");
+const FacebookIcon = require("../../assets/icons/Facebook.png");
 
 const Welcome = () => {
   return (
@@ -22,6 +22,7 @@ const Welcome = () => {
 
         <View style={styles.buttonsContainer}>
           <Button
+            height={50}
             onPress={() => {}}
             title="Continue with Google"
             color={theme.COLORS.WHITE}
@@ -36,6 +37,7 @@ const Welcome = () => {
             }
           />
           <Button
+            height={50}
             onPress={() => {}}
             title="Continue with Facebook"
             color={theme.COLORS.WHITE}
@@ -77,48 +79,44 @@ export const styles = StyleSheet.create({
   welcomeText: {
     fontSize: 40,
     lineHeight: 48,
-    // fontFamily: "Moon-Bold",
     color: theme.COLORS.WHITE,
+    fontFamily: "InterBold700",
   },
   welcomeSubText: {
     fontSize: 16,
     marginTop: 16,
     lineHeight: 24,
-    // fontFamily: "Moon-Bold",
     color: theme.COLORS.WHITE,
+    fontFamily: "InterMedium500",
   },
   buttonsContainer: {
     marginVertical: 26,
   },
   button: {
-    // margin: 10,
     borderRadius: 8,
   },
   buttonText: {
     fontSize: 18,
     lineHeight: 24,
     textAlign: "center",
-    fontWeight: "bold",
-    // fontFamily: "Moon-Bold",
-    // textTransform: "uppercase",
     color: theme.COLORS.BLACK,
+    fontFamily: "InterBold700",
   },
   buttonIcon: {
-    height: 24,
     width: 23,
+    height: 24,
   },
   agreeText: {
-    fontSize: 14, //14
-    // marginTop: 16,
+    fontSize: 14,
     lineHeight: 24,
-    // fontFamily: "Moon-Bold",
     color: theme.COLORS.WHITE,
+    fontFamily: "InterRegular400",
   },
   termsNConditionsText: {
-    fontSize: 14, //14
+    fontSize: 14,
     lineHeight: 24,
     fontWeight: "bold",
     color: theme.COLORS.WHITE,
-    // fontFamily: "Moon-Bold",
+    fontFamily: "InterMedium500",
   },
 });

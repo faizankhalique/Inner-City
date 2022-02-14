@@ -10,6 +10,8 @@ export const theme = {
     TRANSPARENT: "transparent",
     MADISON: "#08205B",
     TANGO: "#F47421",
+    SILVER: "#CDCDCD",
+    EQUATOR: "#E1BC5C",
 
     TULIP_TREE: "#EBB13D",
     WELL_READ: "#B73930",

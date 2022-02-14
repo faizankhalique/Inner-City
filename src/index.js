@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet, Image, View, Text } from "react-native";
 import WelcomeScreen from "./screens/Welcome";
 import SignupScreen from "./screens/Signup";
-import LoginScreen from "./screens/Login";
+import SigninScreen from "./screens/Signin";
 import { theme } from "./services/common/theme";
 
 const Tab = createBottomTabNavigator();
@@ -74,7 +74,10 @@ const styles = StyleSheet.create({
 });
 
 const RootStack = () => (
-  <Stack.Navigator initialRouteName="Signup">
+  <Stack.Navigator
+    // initialRouteName="Signup"
+    // initialRouteName="Signin"
+  >
     <Stack.Screen
       name="Welcome"
       component={WelcomeScreen}
@@ -86,8 +89,8 @@ const RootStack = () => (
       options={{ headerShown: false }}
     />
     <Stack.Screen
-      name="Login"
-      component={LoginScreen}
+      name="Signin"
+      component={SigninScreen}
       options={{ headerShown: false }}
     />
     {/* <Stack.Screen
