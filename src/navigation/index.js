@@ -3,12 +3,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet, Image, View, Text } from "react-native";
-import WelcomeScreen from "./screens/Welcome";
-import SignupScreen from "./screens/Signup";
-import SigninScreen from "./screens/Signin";
-import { theme } from "./services/common/theme";
+import { theme } from "../services/common/theme";
+import SignupNavigation from "./SignupNavigation";
 
-const Tab = createBottomTabNavigator();
+const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const styles = StyleSheet.create({
@@ -74,23 +72,10 @@ const styles = StyleSheet.create({
 });
 
 const RootStack = () => (
-  <Stack.Navigator
-    // initialRouteName="Signup"
-    // initialRouteName="Signin"
-  >
+  <Stack.Navigator>
     <Stack.Screen
-      name="Welcome"
-      component={WelcomeScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="Signup"
-      component={SignupScreen}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="Signin"
-      component={SigninScreen}
+      name="SignupNavigation"
+      component={SignupNavigation}
       options={{ headerShown: false }}
     />
     {/* <Stack.Screen

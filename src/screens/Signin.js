@@ -1,12 +1,30 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 
-const Login = () => {
+const InnerCityLogo = require("../../assets/images/InnerCityLogo.png");
+
+const Signin = () => {
   return (
-    <View>
-      <Text>Login</Text>
+    <View style={styles.container}>
+      <Image
+        resizeMode="stretch"
+        source={InnerCityLogo}
+        style={styles.innerCityLogo}
+      />
     </View>
   );
 };
 
-export default Login;
+export default Signin;
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  innerCityLogo: {
+    width: 234,
+    height: 86,
+    marginTop: 40,
+    alignSelf: "center",
+  },
+});
