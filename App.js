@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, ActivityIndicator } from "react-native";
 import { useFonts } from "expo-font";
-import CreateRootNavigator from "./src/index";
+import Navigation from "./src/navigation/index";
 import { theme } from "./src/services/common/theme";
 
 const InterThin100 = require("./assets/fonts/InterThin100.ttf");
@@ -30,7 +30,7 @@ export default function App() {
   return fontsLoaded ? (
     <>
       <StatusBar style="light" />
-      <CreateRootNavigator />
+      <Navigation />
     </>
   ) : (
     <ActivityIndicator

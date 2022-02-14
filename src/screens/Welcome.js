@@ -1,7 +1,8 @@
 import React from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
 import { theme } from "../services/common/theme";
 import Button from "../components/Button";
+
 const WelcomeImage = require("../../assets/images/Welcome.png");
 const GoogleIcon = require("../../assets/icons/Google.png");
 const FacebookIcon = require("../../assets/icons/Facebook.png");
@@ -14,12 +15,11 @@ const Welcome = () => {
         source={WelcomeImage}
         style={styles.welcomeImage}
       />
-      <View style={styles.bottomContainer}>
+      <ScrollView style={styles.contentContainer}>
         <Text style={styles.welcomeText}>Welcome to Inner City</Text>
         <Text style={styles.welcomeSubText}>
           We are here to listen to you, Come & Win new Prizes on every game
         </Text>
-
         <View style={styles.buttonsContainer}>
           <Button
             height={50}
@@ -52,12 +52,11 @@ const Welcome = () => {
             }
           />
         </View>
-
         <Text style={styles.agreeText}>
           By continuing, you agree to the inner city
           <Text style={styles.termsNConditionsText}> Terms & Conditions</Text>
         </Text>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -72,7 +71,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: "50%",
   },
-  bottomContainer: {
+  contentContainer: {
     paddingTop: 3,
     paddingHorizontal: 28,
   },

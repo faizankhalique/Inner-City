@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
 import { theme } from "../services/common/theme";
 import Button from "../components/Button";
 import SimpleTextField from "../components/SimpleTextField";
 import CheckBox from "../components/CheckBox";
-import { ScrollView } from "react-native-gesture-handler";
 
 const SignupImg1 = require("../../assets/images/SignupImg1.png");
 const SignupImg2 = require("../../assets/images/SignupImg2.png");
@@ -42,15 +41,12 @@ const Signup = ({ navigation }) => {
         resizeMode="stretch"
         style={styles.innerCityLogo}
       />
-
       <View style={styles.innerContainer}>
         <Text style={styles.welcomeText}>Welcome!</Text>
-
         <Text style={styles.signupText}>
           Sign up to join
           <Text style={styles.innerCityText}> INNER CITY</Text>
         </Text>
-
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.fieldsContentContainer}
@@ -119,12 +115,12 @@ const Signup = ({ navigation }) => {
               textStyle={styles.buttonText}
             />
             <Text style={styles.alreadyAccountText}>
-              Already have an account?
+              {`Already have an account? `}
               <Text
-                style={styles.signInText}
+                style={styles.signinText}
                 onPress={() => navigation.navigate("Signin")}
               >
-                {` Sign In`}
+                Sign In
               </Text>
             </Text>
           </View>
@@ -237,7 +233,7 @@ export const styles = StyleSheet.create({
     color: theme.COLORS.WHITE,
     fontFamily: "InterMedium500",
   },
-  signInText: {
+  signinText: {
     color: theme.COLORS.TANGO,
     fontFamily: "InterBold700",
     textDecorationLine: "underline",
