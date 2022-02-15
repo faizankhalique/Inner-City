@@ -5,6 +5,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet, Image, View, Text } from "react-native";
 import { theme } from "../services/common/theme";
 import SignupNavigation from "./SignupNavigation";
+import ForgotPassword from "../screens/ForgotPassword";
+import UpdatePassword from "../screens/UpdatePassword";
+import AccountVerification from "../screens/AccountVerification";
+import PasswordUpdated from "../screens/PasswordUpdated";
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -76,6 +80,26 @@ const RootStack = () => (
     <Stack.Screen
       name="SignupNavigation"
       component={SignupNavigation}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="ForgotPassword"
+      component={ForgotPassword}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="UpdatePassword"
+      component={UpdatePassword}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="AccountVerification"
+      component={AccountVerification}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="PasswordUpdated"
+      component={PasswordUpdated}
       options={{ headerShown: false }}
     />
     {/* <Stack.Screen

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
 import { theme } from "../services/common/theme";
 import Button from "../components/Button";
 import ModernTextField from "../components/ModernTextField";
@@ -65,7 +65,12 @@ const Signin = ({ navigation }) => {
               />
             }
           />
-          <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
+          <Text
+            style={styles.forgotPasswordText}
+            onPress={() => navigation.navigate("ForgotPassword")}
+          >
+            Forgot your password?
+          </Text>
           <Button
             height={40}
             title="Login"
@@ -160,7 +165,7 @@ export const styles = StyleSheet.create({
   forgotPasswordText: {
     fontSize: 12,
     marginTop: 10,
-    lineHeight: 11,
+    lineHeight: 13,
     textAlign: "right",
     color: theme.COLORS.WHITE,
     fontFamily: "InterRegular400",
@@ -189,9 +194,9 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   socialLoginButton: {
-    width: "80%",
     borderRadius: 15,
     marginVertical: 25,
+    width: Dimensions.get("screen").width * 0.37,
   },
   socialLoginButtonIcon: {
     width: 22,
