@@ -15,6 +15,8 @@ export const theme = {
     OCHRE: "#DB702A",
     BISCAY: "#1C3676",
     BLACK_PEARL: "#030714",
+    GULF_BLUE: "#031757",
+    HORIZON: "#5B91A4",
 
     TULIP_TREE: "#EBB13D",
     WELL_READ: "#B73930",
