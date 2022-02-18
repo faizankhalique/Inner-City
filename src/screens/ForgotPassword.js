@@ -54,7 +54,7 @@ const ForgotPassword = ({ navigation }) => {
           color={theme.COLORS.TANGO}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
-          onPress={() => navigation.navigate("UpdatePassword")}
+          onPress={() => navigation.navigate("ResetPasswordEmailSent")}
         />
       </View>
     </View>

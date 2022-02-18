@@ -17,6 +17,8 @@ export const theme = {
     BLACK_PEARL: "#030714",
     GULF_BLUE: "#031757",
     HORIZON: "#5B91A4",
+    GLACIER: "#70B0C6",
+    GOLDEN_GRASS: "#E1AF2F",
 
     TULIP_TREE: "#EBB13D",
     WELL_READ: "#B73930",

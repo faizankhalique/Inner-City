@@ -6,6 +6,7 @@ import { StyleSheet, Image, View, Text } from "react-native";
 import { theme } from "../services/common/theme";
 import SignupNavigation from "./SignupNavigation";
 import ForgotPassword from "../screens/ForgotPassword";
+import ResetPasswordEmailSent from "../screens/ResetPasswordEmailSent";
 import UpdatePassword from "../screens/UpdatePassword";
 import AccountVerification from "../screens/AccountVerification";
 import PasswordUpdated from "../screens/PasswordUpdated";
@@ -85,6 +86,11 @@ const RootStack = () => (
     <Stack.Screen
       name="ForgotPassword"
       component={ForgotPassword}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name="ResetPasswordEmailSent"
+      component={ResetPasswordEmailSent}
       options={{ headerShown: false }}
     />
     <Stack.Screen
