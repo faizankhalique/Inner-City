@@ -10,7 +10,7 @@ const ResetPasswordEmailSentGradient = require("../../assets/images/ResetPasswor
 
 const ResetPasswordEmailSent = ({ navigation }) => {
   useEffect(() => {
-    // setTimeout(() => navigation.navigate("UpdatePassword"), 1500);
+    setTimeout(() => navigation.navigate("UpdatePassword"), 1500);
   }, []);
 
   return (
