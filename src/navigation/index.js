@@ -10,6 +10,7 @@ import ResetPasswordEmailSent from "../screens/ResetPasswordEmailSent";
 import UpdatePassword from "../screens/UpdatePassword";
 import AccountVerification from "../screens/AccountVerification";
 import PasswordUpdated from "../screens/PasswordUpdated";
+import MainNavigation from "./MainNavigation";
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
 });
 
 const RootStack = () => (
-  <Stack.Navigator>
+  <Stack.Navigator initialRouteName="Home">
     <Stack.Screen
       name="SignupNavigation"
       component={SignupNavigation}
@@ -108,11 +109,11 @@ const RootStack = () => (
       component={PasswordUpdated}
       options={{ headerShown: false }}
     />
-    {/* <Stack.Screen
+    <Stack.Screen
       name="Home"
-      component={BottomTabs}
+      component={MainNavigation}
       options={{ headerShown: false }}
-    /> */}
+    />
   </Stack.Navigator>
 );
 

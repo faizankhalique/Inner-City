@@ -26,11 +26,11 @@ const PasswordUpdated = ({ navigation }) => {
         </Text>
         <Button
           height={40}
-          onPress={() => {}}
           title="Get Started"
           color={theme.COLORS.TANGO}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
+          onPress={() => navigation.navigate('Dashboard')}
         />
       </View>
     </View>

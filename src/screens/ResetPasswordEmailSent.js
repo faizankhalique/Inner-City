@@ -101,6 +101,7 @@ export const styles = StyleSheet.create({
     alignSelf: "center",
   },
   gradientModal: {
+    borderRadius: 25,
     width: Dimensions.get("window").width * 0.85,
     height: Dimensions.get("window").height * 0.4,
   },

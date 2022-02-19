@@ -13,6 +13,7 @@ const InterSemiBold600 = require("./assets/fonts/InterSemiBold600.ttf");
 const InterBold700 = require("./assets/fonts/InterBold700.ttf");
 const InterExtraBold800 = require("./assets/fonts/InterExtraBold800.ttf");
 const InterBlack900 = require("./assets/fonts/InterBlack900.ttf");
+const Digitalt500 = require("./assets/fonts/Digitalt500.otf");
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -25,6 +26,7 @@ export default function App() {
     InterBold700,
     InterExtraBold800,
     InterBlack900,
+    Digitalt500,
   });
 
   return fontsLoaded ? (
