@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
-import { theme } from "../services/common/theme";
+import { theme } from "../../services/common/theme";
 import { LinearGradient } from "expo-linear-gradient";
 
-const ResetPasswordEmailSentImg1 = require("../../assets/images/ResetPasswordEmailSentImg1.png");
-const ResetPasswordEmailSentImg2 = require("../../assets/images/ResetPasswordEmailSentImg2.png");
-const InnerCityLogo = require("../../assets/images/InnerCityLogo.png");
-const ResetPasswordEmailSentGradient = require("../../assets/images/ResetPasswordEmailSentGradient.png");
+const ResetPasswordEmailSentImg1 = require("../../../assets/images/ResetPasswordEmailSentImg1.png");
+const ResetPasswordEmailSentImg2 = require("../../../assets/images/ResetPasswordEmailSentImg2.png");
+const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
+const ResetPasswordEmailSentGradient = require("../../../assets/images/ResetPasswordEmailSentGradient.png");
 
 const ResetPasswordEmailSent = ({ navigation }) => {
   useEffect(() => {

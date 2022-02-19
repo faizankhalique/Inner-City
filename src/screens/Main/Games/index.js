@@ -5,20 +5,19 @@ import {
   StyleSheet,
   Image,
   ScrollView,
-  Dimensions,
   ImageBackground,
 } from "react-native";
-import Ripple from "../components/Ripple";
-import { theme } from "../services/common/theme";
+import Ripple from "../../../components/Ripple";
+import { theme } from "../../../services/common/theme";
 
-const GamesImg1 = require("../../assets/images/DashboardImg1.png");
-const InnerCityLogo = require("../../assets/images/InnerCityLogo.png");
-const ModalGradient = require("../../assets/images/ModalGradient.png");
+const GamesImg1 = require("../../../../assets/images/DashboardImg1.png");
+const InnerCityLogo = require("../../../../assets/images/InnerCityLogo.png");
+const ModalGradient = require("../../../../assets/images/ModalGradient.png");
 
-const PaperFortune = require("../../assets/images/PaperFortune.png");
-const ScratchLottery = require("../../assets/images/ScratchLottery.png");
-const RollDice = require("../../assets/images/RollDice.png");
-const SlotMachine = require("../../assets/images/SlotMachine.png");
+const PaperFortune = require("../../../../assets/images/PaperFortune.png");
+const ScratchLottery = require("../../../../assets/images/ScratchLottery.png");
+const RollDice = require("../../../../assets/images/RollDice.png");
+const SlotMachine = require("../../../../assets/images/SlotMachine.png");
 
 const games = [
   {

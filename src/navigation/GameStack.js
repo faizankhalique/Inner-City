@@ -1,14 +1,13 @@
 import "react-native-gesture-handler";
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Image, View, Text } from "react-native";
 import { theme } from "../services/common/theme";
 import SignupNavigation from "./SignupNavigation";
-import ForgotPassword from "../screens/Auth/ForgotPassword";
-import ResetPasswordEmailSent from "../screens/Auth/ResetPasswordEmailSent";
-import UpdatePassword from "../screens/Auth/UpdatePassword";
-import AccountVerification from "../screens/Auth/AccountVerification";
-import PasswordUpdated from "../screens/Auth/PasswordUpdated";
+import ForgotPassword from "../screens/ForgotPassword";
+import ResetPasswordEmailSent from "../screens/ResetPasswordEmailSent";
+import UpdatePassword from "../screens/UpdatePassword";
+import AccountVerification from "../screens/AccountVerification";
+import PasswordUpdated from "../screens/PasswordUpdated";
 import MainNavigation from "./MainNavigation";
 
 const Stack = createStackNavigator();
@@ -75,10 +74,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const RootStack = () => (
-  <Stack.Navigator
-  // initialRouteName="Home"
-  >
+const GameStack = () => (
+  <Stack.Navigator initialRouteName="Home">
     <Stack.Screen
       name="SignupNavigation"
       component={SignupNavigation}
@@ -117,12 +114,4 @@ const RootStack = () => (
   </Stack.Navigator>
 );
 
-const CreateRootNavigator = () => {
-  return (
-    <NavigationContainer theme={{ colors: { background: theme.APP_COLOR_3 } }}>
-      <RootStack />
-    </NavigationContainer>
-  );
-};
-
-export default CreateRootNavigator;
+export default GameStack;

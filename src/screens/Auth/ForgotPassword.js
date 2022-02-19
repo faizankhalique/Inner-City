@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { theme } from "../services/common/theme";
-import Button from "../components/Button";
-import SimpleTextField from "../components/SimpleTextField";
+import { theme } from "../../services/common/theme";
+import Button from "../../components/Button";
+import SimpleTextField from "../../components/SimpleTextField";
 import { LinearGradient } from "expo-linear-gradient";
 
-const ForgotPasswordImg1 = require("../../assets/images/ForgotPasswordImg1.png");
-const ForgotPasswordImg2 = require("../../assets/images/ForgotPasswordImg2.png");
-const InnerCityLogo = require("../../assets/images/InnerCityLogo.png");
+const ForgotPasswordImg1 = require("../../../assets/images/ForgotPasswordImg1.png");
+const ForgotPasswordImg2 = require("../../../assets/images/ForgotPasswordImg2.png");
+const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");

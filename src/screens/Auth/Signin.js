@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
-import { theme } from "../services/common/theme";
-import Button from "../components/Button";
-import ModernTextField from "../components/ModernTextField";
+import { theme } from "../../services/common/theme";
+import Button from "../../components/Button";
+import ModernTextField from "../../components/ModernTextField";
 import { ScrollView } from "react-native-gesture-handler";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import { LinearGradient } from "expo-linear-gradient";
 
-const SignupImg1 = require("../../assets/images/SigninImg1.png");
-const InnerCityLogo = require("../../assets/images/InnerCityLogo.png");
-const GoogleIcon = require("../../assets/icons/Google.png");
-const FacebookIcon = require("../../assets/icons/Facebook.png");
+const SignupImg1 = require("../../../assets/images/SigninImg1.png");
+const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
+const GoogleIcon = require("../../../assets/icons/Google.png");
+const FacebookIcon = require("../../../assets/icons/Facebook.png");
 
 const Signin = ({ navigation }) => {
   const [email, setEmail] = useState("");

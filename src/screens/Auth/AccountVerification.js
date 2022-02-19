@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { theme } from "../services/common/theme";
-import Button from "../components/Button";
+import { theme } from "../../services/common/theme";
+import Button from "../../components/Button";
 import { LinearGradient } from "expo-linear-gradient";
 
-const GraffitiArt = require("../../assets/images/GraffitiArt.png");
+const GraffitiArt = require("../../../assets/images/GraffitiArt.png");
 
-const PasswordUpdated = ({ navigation }) => {
+const AccountVerification = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -21,23 +21,26 @@ const PasswordUpdated = ({ navigation }) => {
         style={styles.graffitiArt}
       />
       <View style={styles.innerContainer}>
-        <Text style={styles.passwordUpdatedText}>
-          {`Your Password\nhas been updated`}
+        <Text style={styles.verificationTitle}>Verification</Text>
+        <Text style={styles.verificationText}>
+          {`Please open the verification link that we sent to `}
+          <Text style={styles.verificationSubText}>jhondoe@gmail.com</Text>
+          {` in order to activate your account.`}
         </Text>
         <Button
           height={40}
-          title="Get Started"
+          onPress={() => {}}
+          title="Resend Link"
           color={theme.COLORS.TANGO}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
-          onPress={() => navigation.navigate('Dashboard')}
         />
       </View>
     </View>
   );
 };
 
-export default PasswordUpdated;
+export default AccountVerification;
 
 export const styles = StyleSheet.create({
   container: {
@@ -61,18 +64,32 @@ export const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 30,
     justifyContent: "center",
   },
-  passwordUpdatedText: {
-    fontSize: 36,
-    lineHeight: 46,
+  verificationTitle: {
+    fontSize: 24,
+    lineHeight: 66,
+    textAlign: "center",
+    color: theme.COLORS.WHITE,
+    fontFamily: "InterBold700",
+  },
+  verificationText: {
+    fontSize: 16,
+    lineHeight: 28,
     textAlign: "center",
     color: theme.COLORS.WHITE,
     fontFamily: "InterRegular400",
   },
+  verificationSubText: {
+    fontSize: 16,
+    lineHeight: 28,
+    textAlign: "center",
+    color: theme.COLORS.WHITE,
+    fontFamily: "InterBold700",
+  },
   button: {
-    width: "65%",
+    width: "70%",
     marginTop: 40,
     borderRadius: 15,
     alignSelf: "center",

@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import GamesScreen from "../screens/Games";
-import ProfileScreen from "../screens/Profile";
+import GamesScreen from "../screens/Main/Games/index";
+import ProfileScreen from "../screens/Main/Profile";
 import { theme } from "../services/common/theme";
-import DashboardScreen from "../screens/Dashboard";
+import DashboardScreen from "../screens/Main/Dashboard";
 import BottomTabBar from "../components/BottomTabBar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 

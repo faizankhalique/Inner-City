@@ -7,19 +7,19 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import { theme } from "../services/common/theme";
-import Ripple from "../components/Ripple";
+import { theme } from "../../services/common/theme";
+import Ripple from "../../components/Ripple";
 
-const DashboardImg1 = require("../../assets/images/DashboardImg1.png");
-const InnerCityLogo = require("../../assets/images/InnerCityLogo.png");
-const ModalGradient = require("../../assets/images/ModalGradient.png");
+const DashboardImg1 = require("../../../assets/images/DashboardImg1.png");
+const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
+const ModalGradient = require("../../../assets/images/ModalGradient.png");
 
-const Songs = require("../../assets/icons/Songs.png");
-const Movies = require("../../assets/icons/Movies.png");
-const Books = require("../../assets/icons/Books.png");
-const ComingSoon = require("../../assets/icons/ComingSoon.png");
-const Quotes = require("../../assets/icons/Quotes.png");
-const News = require("../../assets/icons/News.png");
+const Songs = require("../../../assets/icons/Songs.png");
+const Movies = require("../../../assets/icons/Movies.png");
+const Books = require("../../../assets/icons/Books.png");
+const ComingSoon = require("../../../assets/icons/ComingSoon.png");
+const Quotes = require("../../../assets/icons/Quotes.png");
+const News = require("../../../assets/icons/News.png");
 
 const IconButton = ({
   title = "",

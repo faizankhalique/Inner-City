@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { theme } from "../services/common/theme";
-import Button from "../components/Button";
-import SimpleTextField from "../components/SimpleTextField";
+import { theme } from "../../services/common/theme";
+import Button from "../../components/Button";
+import SimpleTextField from "../../components/SimpleTextField";
 import { LinearGradient } from "expo-linear-gradient";
 
-const UpdatePasswordImg1 = require("../../assets/images/UpdatePasswordImg1.png");
-const UpdatePasswordImg2 = require("../../assets/images/UpdatePasswordImg2.png");
-const InnerCityLogo = require("../../assets/images/InnerCityLogo.png");
+const UpdatePasswordImg1 = require("../../../assets/images/UpdatePasswordImg1.png");
+const UpdatePasswordImg2 = require("../../../assets/images/UpdatePasswordImg2.png");
+const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
 
 const UpdatePassword = ({ navigation }) => {
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   return (

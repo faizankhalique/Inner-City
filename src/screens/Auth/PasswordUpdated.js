@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
-import { theme } from "../services/common/theme";
-import Button from "../components/Button";
+import { theme } from "../../services/common/theme";
+import Button from "../../components/Button";
 import { LinearGradient } from "expo-linear-gradient";
 
-const GraffitiArt = require("../../assets/images/GraffitiArt.png");
+const GraffitiArt = require("../../../assets/images/GraffitiArt.png");
 
-const AccountVerification = ({ navigation }) => {
+const PasswordUpdated = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -21,26 +21,27 @@ const AccountVerification = ({ navigation }) => {
         style={styles.graffitiArt}
       />
       <View style={styles.innerContainer}>
-        <Text style={styles.verificationTitle}>Verification</Text>
-        <Text style={styles.verificationText}>
-          {`Please open the verification link that we sent to `}
-          <Text style={styles.verificationSubText}>jhondoe@gmail.com</Text>
-          {` in order to activate your account.`}
+        <Text style={styles.passwordUpdatedText}>
+          {`Your Password\nhas been updated`}
         </Text>
         <Button
           height={40}
-          onPress={() => {}}
-          title="Resend Link"
+          title="Get Started"
           color={theme.COLORS.TANGO}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
+          onPress={() =>
+            navigation.reset({
+              routes: [{ name: "Home" }],
+            })
+          }
         />
       </View>
     </View>
   );
 };
 
-export default AccountVerification;
+export default PasswordUpdated;
 
 export const styles = StyleSheet.create({
   container: {
@@ -64,32 +65,18 @@ export const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    paddingHorizontal: 30,
+    paddingHorizontal: 10,
     justifyContent: "center",
   },
-  verificationTitle: {
-    fontSize: 24,
-    lineHeight: 66,
-    textAlign: "center",
-    color: theme.COLORS.WHITE,
-    fontFamily: "InterBold700",
-  },
-  verificationText: {
-    fontSize: 16,
-    lineHeight: 28,
+  passwordUpdatedText: {
+    fontSize: 36,
+    lineHeight: 46,
     textAlign: "center",
     color: theme.COLORS.WHITE,
     fontFamily: "InterRegular400",
   },
-  verificationSubText: {
-    fontSize: 16,
-    lineHeight: 28,
-    textAlign: "center",
-    color: theme.COLORS.WHITE,
-    fontFamily: "InterBold700",
-  },
   button: {
-    width: "70%",
+    width: "65%",
     marginTop: 40,
     borderRadius: 15,
     alignSelf: "center",

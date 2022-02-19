@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
-import { theme } from "../services/common/theme";
-import Button from "../components/Button";
-import SimpleTextField from "../components/SimpleTextField";
-import CheckBox from "../components/CheckBox";
+import { theme } from "../../services/common/theme";
+import Button from "../../components/Button";
+import SimpleTextField from "../../components/SimpleTextField";
+import CheckBox from "../../components/CheckBox";
 
-const SignupImg1 = require("../../assets/images/SignupImg1.png");
-const SignupImg2 = require("../../assets/images/SignupImg2.png");
-const SignupImg3 = require("../../assets/images/SignupImg3.png");
-const InnerCityLogo = require("../../assets/images/InnerCityLogo.png");
+const SignupImg1 = require("../../../assets/images/SignupImg1.png");
+const SignupImg2 = require("../../../assets/images/SignupImg2.png");
+const SignupImg3 = require("../../../assets/images/SignupImg3.png");
+const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
 
 const Signup = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
