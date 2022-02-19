@@ -40,7 +40,6 @@ const Button = (props) => {
             height: height,
             justifyContent: "center",
             alignItems: "center",
-            // paddingVertical: 10,
             paddingHorizontal: 10,
             borderRadius: buttonStyle.borderRadius
               ? buttonStyle.borderRadius

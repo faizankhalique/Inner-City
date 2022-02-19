@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import WelcomeScreen from "../screens/Welcome";
-import SignupScreen from "../screens/Signup";
-import SigninScreen from "../screens/Signin";
+import SignupScreen from "../screens/Auth/Signup";
+import SigninScreen from "../screens/Auth/Signin";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { theme } from "../services/common/theme";
 
