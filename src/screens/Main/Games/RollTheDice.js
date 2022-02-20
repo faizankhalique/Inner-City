@@ -6,10 +6,10 @@ import { Text, View, StyleSheet, Image, ImageBackground } from "react-native";
 const BackgroundImg = require("../../../../assets/images/BackgroundImg1.png");
 const ModalGradient = require("../../../../assets/images/ModalGradient.png");
 
-const SlotMachineGame = require("../../../../assets/images/SlotMachineGame.png");
+const RollTheDiceGame = require("../../../../assets/images/RollTheDiceGame.png");
 const Sound = require("../../../../assets/icons/Sound.png");
 
-const SlotMachine = ({ navigation }) => {
+const RollTheDice = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
@@ -30,11 +30,11 @@ const SlotMachine = ({ navigation }) => {
 
           <View style={styles.modalInnerContainer}>
             <Text style={styles.headerText}>Are you ready to play?</Text>
-            <Text style={styles.headerTitle}>SLOT MACHINE</Text>
+            <Text style={styles.headerTitle}>Roll The Dice</Text>
             <Image
               resizeMode="stretch"
-              source={SlotMachineGame}
-              style={styles.slotMachineImage}
+              source={RollTheDiceGame}
+              style={styles.rollTheDiceImage}
             />
           </View>
           <PlayButton onPress={() => navigation.navigate("PrizeWon")} />
@@ -44,7 +44,7 @@ const SlotMachine = ({ navigation }) => {
   );
 };
 
-export default SlotMachine;
+export default RollTheDice;
 
 export const styles = StyleSheet.create({
   container: {
@@ -102,17 +102,17 @@ export const styles = StyleSheet.create({
     fontFamily: "InterBold700",
   },
   headerTitle: {
-    fontSize: 36,
-    lineHeight: 38,
+    fontSize: 24,
+    lineHeight: 24,
     marginVertical: 15,
     textAlign: "center",
     textShadowRadius: 2,
-    fontFamily: "Digitalt500",
     color: theme.COLORS.WHITE,
+    fontFamily: "InterRegular400",
     textShadowColor: theme.COLORS.OCHRE,
     textShadowOffset: { width: 3, height: 3 },
   },
-  slotMachineImage: {
+  rollTheDiceImage: {
     width: "100%",
     height: "78%",
     borderRadius: 30,

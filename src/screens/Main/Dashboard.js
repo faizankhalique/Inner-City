@@ -7,10 +7,11 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import { theme } from "../../services/common/theme";
 import Ripple from "../../components/Ripple";
+import { theme } from "../../services/common/theme";
+import MaterialCommunityIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const DashboardImg1 = require("../../../assets/images/DashboardImg1.png");
+const BackgroundImg = require("../../../assets/images/BackgroundImg1.png");
 const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
 const ModalGradient = require("../../../assets/images/ModalGradient.png");
 
@@ -42,15 +43,24 @@ const Dashboard = () => {
     <View style={styles.container}>
       <Image
         resizeMode="stretch"
-        source={DashboardImg1}
-        style={styles.dashboardImg1}
+        source={BackgroundImg}
+        style={styles.backgroundImage}
       />
       <View style={styles.innerContainer}>
-        <Image
-          source={InnerCityLogo}
-          resizeMode="stretch"
-          style={styles.innerCityLogo}
-        />
+        <View>
+          <Image
+            resizeMode="stretch"
+            source={InnerCityLogo}
+            style={styles.innerCityLogo}
+          />
+          <MaterialCommunityIcon
+            size={20}
+            style={styles.bellIcon}
+            name="bell-ring-outline"
+            color={theme.COLORS.WHITE}
+          />
+        </View>
+
         <View style={styles.modalContainer}>
           <Image
             resizeMode="stretch"
@@ -123,7 +133,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  dashboardImg1: {
+  backgroundImage: {
     top: 0,
     left: 0,
     right: 0,
@@ -137,6 +147,11 @@ export const styles = StyleSheet.create({
     height: 86,
     marginTop: "15%",
     alignSelf: "center",
+  },
+  bellIcon: {
+    right: 0,
+    top: "60%",
+    position: "absolute",
   },
   innerContainer: {
     flex: 1,

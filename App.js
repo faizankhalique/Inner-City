@@ -10,6 +10,7 @@ const InterLight300 = require("./assets/fonts/InterLight300.ttf");
 const InterRegular400 = require("./assets/fonts/InterRegular400.ttf");
 const InterMedium500 = require("./assets/fonts/InterMedium500.ttf");
 const InterSemiBold600 = require("./assets/fonts/InterSemiBold600.ttf");
+const InterSemiBold600Italic = require("./assets/fonts/InterSemiBold600Italic.ttf");
 const InterBold700 = require("./assets/fonts/InterBold700.ttf");
 const InterExtraBold800 = require("./assets/fonts/InterExtraBold800.ttf");
 const InterBlack900 = require("./assets/fonts/InterBlack900.ttf");
@@ -23,6 +24,7 @@ export default function App() {
     InterRegular400,
     InterMedium500,
     InterSemiBold600,
+    InterSemiBold600Italic,
     InterBold700,
     InterExtraBold800,
     InterBlack900,

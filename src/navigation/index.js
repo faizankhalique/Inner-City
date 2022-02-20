@@ -76,9 +76,7 @@ const styles = StyleSheet.create({
 });
 
 const RootStack = () => (
-  <Stack.Navigator
-  // initialRouteName="Home"
-  >
+  <Stack.Navigator initialRouteName="SignupNavigation">
     <Stack.Screen
       name="SignupNavigation"
       component={SignupNavigation}
