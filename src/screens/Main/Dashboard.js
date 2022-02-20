@@ -26,10 +26,11 @@ const IconButton = ({
   title = "",
   isLeft = false,
   iconStyle = {},
+  onPress = () => {},
   icon = InnerCityLogo,
 }) => {
   return (
-    <Ripple onPress={() => {}} style={styles.button}>
+    <Ripple onPress={onPress} style={styles.button}>
       <View style={isLeft ? styles.iconButtonLeft : styles.iconButtonRight}>
         <Image source={icon} resizeMode="stretch" style={iconStyle} />
       </View>
@@ -38,7 +39,7 @@ const IconButton = ({
   );
 };
 
-const Dashboard = () => {
+const Dashboard = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
@@ -58,6 +59,7 @@ const Dashboard = () => {
             style={styles.bellIcon}
             name="bell-ring-outline"
             color={theme.COLORS.WHITE}
+            onPress={() => navigation.navigate("Notifications")}
           />
         </View>
 
@@ -77,12 +79,14 @@ const Dashboard = () => {
                   icon={Songs}
                   title="Songs"
                   iconStyle={styles.buttonIcon}
+                  onPress={() => navigation.navigate("Songs")}
                 />
                 <View style={styles.verticalDivider} />
                 <IconButton
                   icon={Movies}
                   title="Movies"
                   iconStyle={styles.buttonIcon}
+                  onPress={() => navigation.navigate("Movies")}
                 />
               </View>
 
@@ -94,6 +98,7 @@ const Dashboard = () => {
                   icon={Books}
                   title="Books"
                   iconStyle={styles.buttonIcon}
+                  onPress={() => navigation.navigate("Books")}
                 />
                 <View style={styles.verticalDivider} />
                 <IconButton
@@ -111,12 +116,14 @@ const Dashboard = () => {
                   icon={Quotes}
                   title="Quotes"
                   iconStyle={styles.buttonIcon}
+                  onPress={() => navigation.navigate("Quotes")}
                 />
                 <View style={styles.verticalDivider} />
                 <IconButton
                   icon={News}
                   title="News"
                   iconStyle={styles.newsButtonIcon}
+                  onPress={() => navigation.navigate("News")}
                 />
               </View>
             </ScrollView>

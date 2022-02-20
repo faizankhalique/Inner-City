@@ -51,12 +51,12 @@ function BottomTabBar({ navigation, state }) {
         return (
           <Ripple
             disabled={isActive}
-            onPress={() => navigation.navigate("Profile")}
+            onPress={() => navigation.navigate("Dashboard")}
             style={{ paddingBottom: isActive ? 10 : 0, borderRadius: 60 }}
           >
             <Image
               resizeMode="stretch"
-              source={ProfileTabButton}
+              source={HomeTabButton}
               style={isActive ? styles.activeTab : styles.tab}
             />
           </Ripple>
@@ -65,12 +65,12 @@ function BottomTabBar({ navigation, state }) {
         return (
           <Ripple
             disabled={isActive}
-            onPress={() => navigation.navigate("Dashboard")}
+            onPress={() => navigation.navigate("Profile")}
             style={{ paddingBottom: isActive ? 10 : 0, borderRadius: 60 }}
           >
             <Image
               resizeMode="stretch"
-              source={HomeTabButton}
+              source={ProfileTabButton}
               style={isActive ? styles.activeTab : styles.tab}
             />
           </Ripple>
@@ -105,18 +105,18 @@ function BottomTabBar({ navigation, state }) {
       case 1:
         return (
           <>
-            {getTabIcon(0, false)}
-            {getTabIcon(1, true)}
             {getTabIcon(2, false)}
+            {getTabIcon(1, true)}
+            {getTabIcon(0, false)}
           </>
         );
 
       case 2:
         return (
           <>
-            {getTabIcon(0, false)}
-            {getTabIcon(2, true)}
             {getTabIcon(1, false)}
+            {getTabIcon(2, true)}
+            {getTabIcon(0, false)}
           </>
         );
     }
