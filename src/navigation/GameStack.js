@@ -1,14 +1,13 @@
 import "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StyleSheet, Image, View, Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { theme } from "../services/common/theme";
-import SignupNavigation from "./SignupNavigation";
-import ForgotPassword from "../screens/ForgotPassword";
-import ResetPasswordEmailSent from "../screens/ResetPasswordEmailSent";
-import UpdatePassword from "../screens/UpdatePassword";
-import AccountVerification from "../screens/AccountVerification";
-import PasswordUpdated from "../screens/PasswordUpdated";
-import MainNavigation from "./MainNavigation";
+import Games from "../screens/Main/Games/index";
+import SlotMachineGame from "../screens/Main/Games/SlotMachine";
+import RollTheDiceGame from "../screens/Main/Games/RollTheDice";
+import PrizeWonScreen from "../screens/Main/Games/PrizeWon";
+import ScratchTheLotteryGame from "../screens/Main/Games/ScratchTheLottery";
+import PaperFortuneTellerGame from "../screens/Main/Games/PaperFortuneTeller";
 
 const Stack = createStackNavigator();
 
@@ -75,40 +74,35 @@ const styles = StyleSheet.create({
 });
 
 const GameStack = () => (
-  <Stack.Navigator initialRouteName="Home">
+  <Stack.Navigator>
     <Stack.Screen
-      name="SignupNavigation"
-      component={SignupNavigation}
+      name="GamesHome"
+      component={Games}
       options={{ headerShown: false }}
     />
     <Stack.Screen
-      name="ForgotPassword"
-      component={ForgotPassword}
+      name="PaperFortuneTeller"
+      component={PaperFortuneTellerGame}
       options={{ headerShown: false }}
     />
     <Stack.Screen
-      name="ResetPasswordEmailSent"
-      component={ResetPasswordEmailSent}
+      name="SlotMachine"
+      component={SlotMachineGame}
       options={{ headerShown: false }}
     />
     <Stack.Screen
-      name="UpdatePassword"
-      component={UpdatePassword}
+      name="ScratchTheLottery"
+      component={ScratchTheLotteryGame}
       options={{ headerShown: false }}
     />
     <Stack.Screen
-      name="AccountVerification"
-      component={AccountVerification}
+      name="RollTheDice"
+      component={RollTheDiceGame}
       options={{ headerShown: false }}
     />
     <Stack.Screen
-      name="PasswordUpdated"
-      component={PasswordUpdated}
-      options={{ headerShown: false }}
-    />
-    <Stack.Screen
-      name="Home"
-      component={MainNavigation}
+      name="PrizeWon"
+      component={PrizeWonScreen}
       options={{ headerShown: false }}
     />
   </Stack.Navigator>

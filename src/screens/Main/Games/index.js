@@ -9,8 +9,9 @@ import {
 } from "react-native";
 import Ripple from "../../../components/Ripple";
 import { theme } from "../../../services/common/theme";
+import PlayButton from "../../../components/PlayButton";
 
-const GamesImg1 = require("../../../../assets/images/DashboardImg1.png");
+const BackgroundImg = require("../../../../assets/images/BackgroundImg1.png");
 const InnerCityLogo = require("../../../../assets/images/InnerCityLogo.png");
 const ModalGradient = require("../../../../assets/images/ModalGradient.png");
 
@@ -18,6 +19,8 @@ const PaperFortune = require("../../../../assets/images/PaperFortune.png");
 const ScratchLottery = require("../../../../assets/images/ScratchLottery.png");
 const RollDice = require("../../../../assets/images/RollDice.png");
 const SlotMachine = require("../../../../assets/images/SlotMachine.png");
+
+const Sound = require("../../../../assets/icons/Sound.png");
 
 const games = [
   {
@@ -31,12 +34,12 @@ const games = [
     image: SlotMachine,
   },
   {
-    title: "Scratch the Lottery",
+    title: "Scratch The Lottery",
     screen: "ScratchTheLottery",
     image: ScratchLottery,
   },
   {
-    title: "Roll the Dice",
+    title: "Roll The Dice",
     screen: "RollTheDice",
     image: RollDice,
   },
@@ -62,18 +65,25 @@ const ImageButton = ({
   );
 };
 
-const Games = () => {
-  const [selectedGame, setSelectedGame] = useState(games[1].screen);
+const Games = ({ navigation }) => {
+  const [selectedGame, setSelectedGame] = useState(1);
 
   return (
     <View style={styles.container}>
-      <Image resizeMode="stretch" source={GamesImg1} style={styles.gamesImg1} />
+      <Image
+        resizeMode="stretch"
+        source={BackgroundImg}
+        style={styles.backgroundImage}
+      />
       <View style={styles.innerContainer}>
-        <Image
-          resizeMode="stretch"
-          source={InnerCityLogo}
-          style={styles.innerCityLogo}
-        />
+        <View>
+          <Image
+            resizeMode="stretch"
+            source={InnerCityLogo}
+            style={styles.innerCityLogo}
+          />
+          <Image source={Sound} resizeMode="stretch" style={styles.soundIcon} />
+        </View>
         <View style={styles.modalContainer}>
           <ImageBackground
             resizeMode="stretch"
@@ -91,17 +101,15 @@ const Games = () => {
                   key={index}
                   image={game.image}
                   title={game.title}
-                  selected={selectedGame === game.screen}
-                  onSelect={() => setSelectedGame(game.screen)}
+                  selected={selectedGame === index}
+                  onSelect={() => setSelectedGame(index)}
                 />
               ))}
             </ScrollView>
           </View>
-          <View style={styles.playButtonContainer}>
-            <Ripple style={styles.playButton} onPress={() => {}}>
-              <Text style={styles.playButtonText}>Play</Text>
-            </Ripple>
-          </View>
+          <PlayButton
+            onPress={() => navigation.navigate(games[selectedGame].screen)}
+          />
         </View>
       </View>
     </View>
@@ -114,7 +122,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  gamesImg1: {
+  backgroundImage: {
     top: 0,
     left: 0,
     right: 0,
@@ -128,6 +136,13 @@ export const styles = StyleSheet.create({
     height: 86,
     marginTop: "15%",
     alignSelf: "center",
+  },
+  soundIcon: {
+    right: 0,
+    width: 22,
+    height: 22,
+    top: "60%",
+    position: "absolute",
   },
   innerContainer: {
     flex: 1,

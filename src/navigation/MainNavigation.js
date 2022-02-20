@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import GamesScreen from "../screens/Main/Games/index";
 import ProfileScreen from "../screens/Main/Profile";
 import { theme } from "../services/common/theme";
 import DashboardScreen from "../screens/Main/Dashboard";
+import GameStack from "../navigation/GameStack";
 import BottomTabBar from "../components/BottomTabBar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -31,7 +31,7 @@ const MainNavigation = () => {
       />
       <Tab.Screen
         name="Games"
-        component={GamesScreen}
+        component={GameStack}
         options={{
           headerShown: false,
           unmountOnBlur: true,
