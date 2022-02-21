@@ -3,7 +3,7 @@ import Ripple from "../../components/Ripple";
 import { theme } from "../../services/common/theme";
 import { Text, View, StyleSheet, FlatList } from "react-native";
 
-const notifications = [
+const news = [
   {
     title: "The America Win football match",
     description:
@@ -30,7 +30,7 @@ const News = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={notifications}
+        data={news}
         keyExtractor={(_, index) => index}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContentContainer}
