@@ -74,7 +74,11 @@ const Signin = ({ navigation }) => {
           <Button
             height={40}
             title="Login"
-            onPress={() => {}}
+            onPress={() =>
+              navigation.reset({
+                routes: [{ name: "Home" }],
+              })
+            }
             color={theme.COLORS.TANGO}
             buttonStyle={styles.loginButton}
             textStyle={styles.loginButtonText}

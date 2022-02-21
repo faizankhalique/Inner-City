@@ -6,7 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const GraffitiArt = require("../../../assets/images/GraffitiArt.png");
 
-const AccountVerification = ({ navigation }) => {
+const AccountVerification = () => {
   return (
     <View style={styles.container}>
       <LinearGradient

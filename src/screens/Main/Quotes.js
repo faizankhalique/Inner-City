@@ -4,21 +4,30 @@ import { theme } from "../../services/common/theme";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import { Text, View, StyleSheet, FlatList } from "react-native";
 
-const notifications = [
+const quotes = [
   {
     text: "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
+    more: "\n\nThe world of technology thrives best when individuals are left alone to be different, creative, and disobedient.\n\nThe world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
     name: "Don Valentine",
   },
   {
     text: "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
+    more: "\n\nThe world of technology thrives best when individuals are left alone to be different, creative, and disobedient.\n\nThe world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
     name: "Don Valentine",
   },
   {
     text: "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
+    more: "\n\nThe world of technology thrives best when individuals are left alone to be different, creative, and disobedient.\n\nThe world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
     name: "Don Valentine",
   },
   {
     text: "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
+    more: "\n\nThe world of technology thrives best when individuals are left alone to be different, creative, and disobedient.\n\nThe world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
+    name: "Don Valentine",
+  },
+  {
+    text: "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
+    more: "\n\nThe world of technology thrives best when individuals are left alone to be different, creative, and disobedient.\n\nThe world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
     name: "Don Valentine",
   },
 ];
@@ -29,15 +38,20 @@ const Quotes = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={notifications}
+        data={quotes}
         keyExtractor={(_, index) => index}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContentContainer}
         renderItem={({ item, index }) => (
           <View style={styles.listItem}>
-            <Text style={styles.quotesText}>{item.text}</Text>
+            <Text style={styles.quoteText}>
+              {item.text}
+              {index === expandedItemIndex && item.more}
+            </Text>
+
             <Ripple
               style={styles.footer}
+              disabled={index === expandedItemIndex}
               onPress={() => setExpandedItemIndex(index)}
             >
               <Text style={styles.nameText}>{item.name}</Text>
@@ -74,7 +88,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: theme.COLORS.BISCAY,
   },
-  quotesText: {
+  quoteText: {
     fontSize: 19,
     lineHeight: 24,
     paddingTop: 20,
@@ -82,6 +96,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     color: theme.COLORS.WHITE,
     fontFamily: "InterRegular400",
+  },
+  quoteMoreText: {
+    fontSize: 16,
+    lineHeight: 20,
+    color: theme.COLORS.WHITE,
+    fontFamily: "InterBold700",
   },
   footer: {
     paddingTop: 15,
