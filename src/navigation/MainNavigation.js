@@ -117,8 +117,10 @@ const MainNavigation = () => {
         name="Books"
         component={BooksScreen}
         options={({ navigation }) => ({
+          title: "My Books",
           unmountOnBlur: true,
           headerTransparent: true,
+          headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => <BackButton navigation={navigation} />,
@@ -139,8 +141,10 @@ const MainNavigation = () => {
         name="Songs"
         component={SongsScreen}
         options={({ navigation }) => ({
+          title: "My Songs",
           unmountOnBlur: true,
           headerTransparent: true,
+          headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => <BackButton navigation={navigation} />,
