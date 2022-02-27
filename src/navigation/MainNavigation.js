@@ -16,6 +16,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ripple from "../components/Ripple";
 import EntypoIcon from "react-native-vector-icons/Entypo";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 
 const Tab = createBottomTabNavigator();
 
@@ -147,7 +148,9 @@ const MainNavigation = () => {
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
           headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRightContainerStyle: styles.headerRightContainer,
           headerLeft: () => <BackButton navigation={navigation} />,
+          headerRight: () => <SearchButton />,
         })}
       />
     </Tab.Navigator>
@@ -173,6 +176,14 @@ const EditProfileButton = ({ navigation }) => {
   );
 };
 
+const SearchButton = () => {
+  return (
+    <Ripple style={styles.searchButton} onPress={() => {}}>
+      <MaterialIcon size={24} name="search" color={theme.COLORS.WHITE} />
+    </Ripple>
+  );
+};
+
 export default MainNavigation;
 
 const styles = StyleSheet.create({
@@ -190,6 +201,13 @@ const styles = StyleSheet.create({
     paddingRight: 15,
   },
   backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  searchButton: {
     width: 40,
     height: 40,
     borderRadius: 25,

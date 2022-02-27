@@ -11,6 +11,7 @@ import Mm from "../../../assets/icons/Mm.png";
 import Eminem from "../../../assets/icons/Eminem.png";
 import Miami from "../../../assets/icons/Miami.png";
 import SongPlaying from "../../../assets/icons/SongPlaying.png";
+import Artist from "../../../assets/icons/Artist.png";
 
 const MySongs1 = require("../../../assets/images/MySongs1.png");
 const MySongs2 = require("../../../assets/images/MySongs2.png");
@@ -104,6 +105,10 @@ const Songs = () => {
         source={BackgroundGradient}
         style={styles.gradientContainer}
       />
+      <View style={styles.artistContainer}>
+        <Image source={Artist} resizeMode="stretch" style={styles.artistIcon} />
+        <View style={styles.artistOnlineIndicator} />
+      </View>
       <FlatList
         data={songs}
         keyExtractor={(_, index) => index}
@@ -211,6 +216,31 @@ const styles = StyleSheet.create({
     height: "55%",
     width: "100%",
     position: "absolute",
+  },
+  artistContainer: {
+    zIndex: 1,
+    top: "42%",
+    right: "4%",
+    borderWidth: 1,
+    borderRadius: 90,
+    position: "absolute",
+    borderColor: theme.COLORS.GRAY_1,
+  },
+  artistIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  artistOnlineIndicator: {
+    right: 3,
+    width: 8,
+    height: 8,
+    borderWidth: 0.5,
+    borderRadius: 10,
+    position: "absolute",
+    borderColor: theme.COLORS.GRAY_1,
+    backgroundColor: theme.COLORS.DE_YORK,
   },
   innerContainer: {
     flex: 1,
