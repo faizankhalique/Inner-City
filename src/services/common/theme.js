@@ -30,6 +30,8 @@ export const theme = {
     WHITE_OPACITY_37P: "#FFFFFF5E",
     SILVER_1: "#BCBCBC",
     MADISON_OPACITY_50P: "#08205B80",
+    GRAY_1: "#828282",
+    DE_YORK: "#6FCF97",
 
     BLACK_04: "#040404",
     COD_GRAY_OPACITY_50P: "#12121280",
