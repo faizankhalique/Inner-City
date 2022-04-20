@@ -1,6 +1,8 @@
 import "react-native-gesture-handler";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+
 import { theme } from "../services/common/theme";
 import SignupNavigation from "./SignupNavigation";
 import ForgotPassword from "../screens/Auth/ForgotPassword";
@@ -12,8 +14,8 @@ import MainNavigation from "./MainNavigation";
 
 const Stack = createStackNavigator();
 
-const RootStack = () => (
-  <Stack.Navigator initialRouteName="SignupNavigation">
+const AuthStack = () => (
+  <Stack.Navigator>
     <Stack.Screen
       name="SignupNavigation"
       component={SignupNavigation}
@@ -44,18 +46,13 @@ const RootStack = () => (
       component={PasswordUpdated}
       options={{ headerShown: false }}
     />
-    <Stack.Screen
-      name="Home"
-      component={MainNavigation}
-      options={{ headerShown: false }}
-    />
   </Stack.Navigator>
 );
 
-const CreateRootNavigator = () => {
+const CreateRootNavigator = ({ isAuthenticated = false }) => {
   return (
     <NavigationContainer theme={{ colors: { background: theme.APP_COLOR_3 } }}>
-      <RootStack />
+      {isAuthenticated ? <MainNavigation /> : <AuthStack />}
     </NavigationContainer>
   );
 };

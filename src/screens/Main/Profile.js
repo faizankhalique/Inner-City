@@ -8,7 +8,12 @@ const BackgroundImg = require("../../../assets/images/GraffitiArt.png");
 const Google = require("../../../assets/icons/Google1.png");
 const Facebook = require("../../../assets/icons/Facebook1.png");
 
+import firebase from "firebase";
+
 const Profile = () => {
+  const { phoneNumber, email, displayName } =
+    firebase.auth()?.currentUser || {};
+
   return (
     <View style={styles.container}>
       <Image
@@ -25,16 +30,16 @@ const Profile = () => {
       <View style={styles.innerContainer}>
         <Image source={Avatar} resizeMode="stretch" style={styles.avatar} />
 
-        <Text style={styles.name}>James Robert</Text>
+        <Text style={styles.name}>{displayName || ""}</Text>
 
         <View style={styles.fieldValueContainer}>
           <Text style={styles.fieldName}>Phone no:</Text>
-          <Text style={styles.fieldValue}>+1 11 222 3333</Text>
+          <Text style={styles.fieldValue}>{phoneNumber || ""}</Text>
         </View>
 
         <View style={styles.focusedFieldValueContainer}>
           <Text style={styles.fieldName}>Email:</Text>
-          <Text style={styles.fieldValue}>Jamesrobert@gmail.com</Text>
+          <Text style={styles.fieldValue}>{email || ""}</Text>
         </View>
 
         <View style={styles.linkedAccountsContainer}>
@@ -52,6 +57,14 @@ const Profile = () => {
         </View>
 
         <View style={styles.divider} />
+        <Text
+          style={styles.logoutText}
+          onPress={() => {
+            firebase.auth().signOut();
+          }}
+        >
+          Logout
+        </Text>
       </View>
     </View>
   );
@@ -142,6 +155,14 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     marginLeft: 20,
+  },
+  logoutText: {
+    fontSize: 16,
+    lineHeight: 19,
+    color: theme.COLORS.WHITE,
+    fontFamily: "InterBold700",
+    textAlign: "center",
+    marginTop: 10,
   },
   divider: {
     height: 1,

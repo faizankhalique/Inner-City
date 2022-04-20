@@ -1,22 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../../components/Button";
 import { theme } from "../../services/common/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import SimpleTextField from "../../components/SimpleTextField";
 import { View, StyleSheet, Image, Dimensions, ScrollView } from "react-native";
+import firebase from "firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import * as ImagePicker from "expo-image-picker";
 
 const Avatar = require("../../../assets/images/Avatar.png");
 const BackgroundImg = require("../../../assets/images/GraffitiArt.png");
 const Google = require("../../../assets/icons/Google1.png");
 const Facebook = require("../../../assets/icons/Facebook1.png");
 
-const EditProfile = () => {
+const EditProfile = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [gmailLink, setGmailLink] = useState("");
   const [facebookLink, setFacebookLink] = useState("");
+
+  const user = firebase.auth()?.currentUser;
+
+  useEffect(() => {
+    abc();
+    const { phoneNumber, email, displayName } = user || {};
+    setFirstName(displayName.split(" ")[0]);
+    setLastName(displayName.split(" ")[1]);
+    setPhoneNumber(phoneNumber);
+    setEmail(email);
+  }, []);
+
+  const handleUpdateProfile = async () => {
+    // const res = await ImagePicker.launchCameraAsync({
+    //   allowsEditing: true,
+    //   // base64: true,
+    // });
+    // // res.
+    // const response = await fetch(res.uri);
+    // const fileBlob = await response.blob();
+    // console.log(fileBlob);
+
+    // const storageRef = await firebase.storage().ref("users/" + user.uid);
+    // storageRef.put();
+    // console.log(a);
+
+    user.updateProfile({
+      displayName: `${firstName} ${lastName}`,
+    });
+    // user.updatePhoneNumber(phoneNumber);
+  };
+
+  const abc = async () => {
+    firebase
+      .firestore()
+      .collection("users")
+      .onSnapshot((a) => console.log(a));
+    // console.log(a);
+  };
 
   return (
     <View style={styles.container}>
@@ -63,6 +105,7 @@ const EditProfile = () => {
           <SimpleTextField
             value={email}
             label="Email"
+            editable={false}
             placeholder="james@gmail.com"
             onChangeText={(val) => setEmail(val)}
           />
@@ -88,7 +131,7 @@ const EditProfile = () => {
           <Button
             height={40}
             title="Save"
-            onPress={() => {}}
+            onPress={handleUpdateProfile}
             color={theme.COLORS.TANGO}
             buttonStyle={styles.button}
             textStyle={styles.buttonText}
@@ -97,7 +140,7 @@ const EditProfile = () => {
           <Button
             height={40}
             title="Cancel"
-            onPress={() => {}}
+            onPress={() => navigation.goBack()}
             color={theme.COLORS.TANGO}
             buttonStyle={styles.button}
             textStyle={styles.buttonText}

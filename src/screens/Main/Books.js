@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { theme } from "../../services/common/theme";
 import {
   Text,
@@ -10,6 +10,9 @@ import {
   ScrollView,
 } from "react-native";
 import Ripple from "../../components/Ripple";
+import { actions } from "../../services/state/Reducer";
+import { useStateValue } from "../../services/state/State";
+import firebase from "firebase";
 
 const DisplacementBook = require("../../../assets/images/DisplacementBook.png");
 const IAmAWildSeedBook = require("../../../assets/images/IAmAWildSeedBook.png");
@@ -21,55 +24,87 @@ const RecentUsedBook1 = require("../../../assets/images/RecentUsedBook1.png");
 const RecentUsedBook2 = require("../../../assets/images/RecentUsedBook2.png");
 const RecentUsedBook3 = require("../../../assets/images/RecentUsedBook3.png");
 
-const popularNow = [
-  {
-    name: "Displacement",
-    author: "Kiku Hughes",
-    image: DisplacementBook,
-  },
-  {
-    name: `I'm a Wild Seed`,
-    author: "Sharon Lee de la Cruz",
-    image: IAmAWildSeedBook,
-  },
-  {
-    name: "Bionic",
-    author: "Koren Shadmi",
-    image: BionicBook,
-  },
-];
+// const popularNow = [
+//   {
+//     name: "Displacement",
+//     author: "Kiku Hughes",
+//     thumbnail: DisplacementBook,
+//   },
+//   {
+//     name: `I'm a Wild Seed`,
+//     author: "Sharon Lee de la Cruz",
+//     thumbnail: IAmAWildSeedBook,
+//   },
+//   {
+//     name: "Bionic",
+//     author: "Koren Shadmi",
+//     thumbnail: BionicBook,
+//   },
+// ];
 
-const trendingNow = [
-  {
-    name: "Young Mungo",
-    author: "Douglas Stuart",
-    image: YoungMungoBook,
-  },
-  {
-    name: `Trust`,
-    author: "Hernan Diaz",
-    image: TrustBook,
-  },
-  {
-    name: "The Guncle",
-    author: "Steven Rowley",
-    image: TheGuncle,
-  },
-];
+// const trendingNow = [
+//   {
+//     name: "Young Mungo",
+//     author: "Douglas Stuart",
+//     thumbnail: YoungMungoBook,
+//   },
+//   {
+//     name: `Trust`,
+//     author: "Hernan Diaz",
+//     thumbnail: TrustBook,
+//   },
+//   {
+//     name: "The Guncle",
+//     author: "Steven Rowley",
+//     thumbnail: TheGuncle,
+//   },
+// ];
 
-const recentlyRead = [
-  {
-    image: RecentUsedBook1,
-  },
-  {
-    image: RecentUsedBook2,
-  },
-  {
-    image: RecentUsedBook3,
-  },
-];
+// const recentlyRead = [
+//   {
+//     thumbnail: RecentUsedBook1,
+//   },
+//   {
+//     thumbnail: RecentUsedBook2,
+//   },
+//   {
+//     thumbnail: RecentUsedBook3,
+//   },
+// ];
 
 const Books = () => {
+  const [, dispatch] = useStateValue();
+
+  const [popularNowBooks, setPopularNowBooks] = useState([]);
+  const [trendingNowBooks, setTrendingNowBooks] = useState([]);
+  const [recentlyReadBooks, setRecentlyReadBooks] = useState([]);
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const fetchBooks = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("books")
+        .onSnapshot((querySnapshot) => {
+          const books = [];
+          querySnapshot.forEach((b) => {
+            const book = b.data();
+            books.push(book);
+          });
+          setPopularNowBooks(books.filter((b) => b.type === "popular_now"));
+          setTrendingNowBooks(books.filter((b) => b.type === "trending_now"));
+          setRecentlyReadBooks(books.filter((b) => b.type === "recently_read"));
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <ScrollView
       style={styles.container}
@@ -81,7 +116,7 @@ const Books = () => {
       </View>
       <FlatList
         horizontal
-        data={popularNow}
+        data={popularNowBooks}
         keyExtractor={(_, index) => index}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContentContainer}
@@ -89,16 +124,16 @@ const Books = () => {
           <View style={styles.listItemContainer}>
             <Ripple style={styles.listItem} onPress={() => {}}>
               <Image
-                source={item.image}
                 resizeMode="stretch"
                 style={styles.bookThumbnail}
+                source={{ uri: item.thumbnail }}
               />
               <View style={styles.bookInfoContainer}>
                 <Text style={styles.bookName} numberOfLines={1}>
-                  {item.name}
+                  {item.name || ""}
                 </Text>
                 <Text style={styles.bookAuthor} numberOfLines={1}>
-                  {item.author}
+                  {item.author || ""}
                 </Text>
               </View>
             </Ripple>
@@ -111,7 +146,7 @@ const Books = () => {
       </View>
       <FlatList
         horizontal
-        data={trendingNow}
+        data={trendingNowBooks}
         keyExtractor={(_, index) => index}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContentContainer}
@@ -119,16 +154,16 @@ const Books = () => {
           <View style={styles.listItemContainer}>
             <Ripple style={styles.listItem} onPress={() => {}}>
               <Image
-                source={item.image}
                 resizeMode="stretch"
                 style={styles.bookThumbnail}
+                source={{ uri: item.thumbnail }}
               />
               <View style={styles.bookInfoContainer}>
                 <Text style={styles.bookName} numberOfLines={1}>
-                  {item.name}
+                  {item.name || ""}
                 </Text>
                 <Text style={styles.bookAuthor} numberOfLines={1}>
-                  {item.author}
+                  {item.author || ""}
                 </Text>
               </View>
             </Ripple>
@@ -141,7 +176,7 @@ const Books = () => {
       </View>
       <FlatList
         horizontal
-        data={recentlyRead}
+        data={recentlyReadBooks}
         keyExtractor={(_, index) => index}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContentContainer}
@@ -149,9 +184,9 @@ const Books = () => {
           <View style={styles.listItemContainer}>
             <Ripple style={styles.listItem} onPress={() => {}}>
               <Image
-                source={item.image}
                 resizeMode="stretch"
                 style={styles.bookThumbnail1}
+                source={{ uri: item.thumbnail }}
               />
             </Ripple>
           </View>
@@ -166,10 +201,9 @@ export default Books;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: "30%",
   },
   scrollContentContainer: {
-    paddingBottom: "40%",
+    paddingBottom: "5%",
   },
   listHeaderContainer: {
     marginVertical: 12,

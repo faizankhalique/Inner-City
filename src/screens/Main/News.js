@@ -1,32 +1,63 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Ripple from "../../components/Ripple";
 import { theme } from "../../services/common/theme";
 import { Text, View, StyleSheet, FlatList } from "react-native";
+import { actions } from "../../services/state/Reducer";
+import { useStateValue } from "../../services/state/State";
+import firebase from "firebase";
 
-const news = [
-  {
-    title: "The America Win football match",
-    description:
-      "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
-  },
-  {
-    title: "The America Win football match",
-    description:
-      "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
-  },
-  {
-    title: "The America Win football match",
-    description:
-      "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
-  },
-  {
-    title: "The America Win football match",
-    description:
-      "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
-  },
-];
+// const news = [
+//   {
+//     heading: "The America Win football match",
+//     description:
+//       "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
+//   },
+//   {
+//     heading: "The America Win football match",
+//     description:
+//       "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
+//   },
+//   {
+//     heading: "The America Win football match",
+//     description:
+//       "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
+//   },
+//   {
+//     heading: "The America Win football match",
+//     description:
+//       "The world of technology thrives best when individuals are left alone to be different, creative, and disobedient.",
+//   },
+// ];
 
 const News = () => {
+  const [, dispatch] = useStateValue();
+
+  const [news, setNews] = useState([]);
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  const fetchNews = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("news")
+        .onSnapshot((querySnapshot) => {
+          const newss = [];
+          querySnapshot.forEach((n) => {
+            const news = n.data();
+            newss.push(news);
+          });
+          setNews(newss);
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -37,7 +68,7 @@ const News = () => {
         renderItem={({ item }) => (
           <View style={styles.listItemContainer}>
             <Ripple onPress={() => {}} style={styles.listItem}>
-              <Text style={styles.newsTitle}>{item.title}</Text>
+              <Text style={styles.newsHeading}>{item.heading}</Text>
               <Text style={styles.newsDescription}>{item.description}</Text>
             </Ripple>
           </View>
@@ -52,7 +83,7 @@ export default News;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: "30%",
+    paddingTop: "3%",
     paddingHorizontal: 20,
   },
   listContentContainer: {
@@ -67,9 +98,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     backgroundColor: theme.COLORS.BISCAY,
   },
-  newsTitle: {
+  newsHeading: {
     fontSize: 22,
-    lineHeight: 20,
+    lineHeight: 22,
     color: theme.COLORS.WHITE,
     fontFamily: "InterBold700",
   },
