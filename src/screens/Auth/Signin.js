@@ -7,6 +7,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import { LinearGradient } from "expo-linear-gradient";
+import firebase from "firebase";
+import { useStateValue } from "../../services/state/State";
+import { actions } from "../../services/state/Reducer";
+import { WEB_CLIENT_ID, IOS_CLIENT_ID, ANDROID_CLIENT_ID } from "@env";
+import * as Google from "expo-google-app-auth";
 
 const SignupImg1 = require("../../../assets/images/SigninImg1.png");
 const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
@@ -14,8 +19,64 @@ const GoogleIcon = require("../../../assets/icons/Google.png");
 const FacebookIcon = require("../../../assets/icons/Facebook.png");
 
 const Signin = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [, dispatch] = useStateValue();
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+
+  const [email, setEmail] = useState("a1@gmail.com");
+  const [password, setPassword] = useState("12345678");
+
+  const handleLogin = async () => {
+    dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+    await firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((res) => {
+        if (res && res.user && res.user.uid) {
+        }
+      })
+      .catch((error) => {
+        let errorCode = error.code;
+        let errorMessage = error.message;
+        if (errorCode == "auth/weak-password") {
+          alert("Weak Password!");
+        } else {
+          alert(errorMessage);
+        }
+      });
+    dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await Google.logInAsync({
+        behavior: "web",
+        iosClientId: IOS_CLIENT_ID,
+        scopes: ["profile", "email"],
+        androidClientId: ANDROID_CLIENT_ID,
+        webClientId: WEB_CLIENT_ID,
+      });
+      console.log("GResult: ", result);
+
+      if (result.type === "success") {
+        const credential = firebase.auth.GoogleAuthProvider.credential(
+          result.idToken,
+          result.accessToken
+        );
+
+        // const credential1 = firebase.auth.PhoneAuthProvider.credential({})
+        const googleProfileData = await firebase
+          .auth()
+          .signInWithCredential(credential);
+        console.log(googleProfileData);
+        // this.onLoginSuccess.bind(this);
+      }
+    } catch ({ message }) {
+      alert("login: Error:" + message);
+    }
+  };
+
+  const handleFacebookLogin = async () => {};
 
   return (
     <View style={styles.container}>
@@ -74,11 +135,7 @@ const Signin = ({ navigation }) => {
           <Button
             height={40}
             title="Login"
-            onPress={() =>
-              navigation.reset({
-                routes: [{ name: "Home" }],
-              })
-            }
+            onPress={handleLogin}
             color={theme.COLORS.TANGO}
             buttonStyle={styles.loginButton}
             textStyle={styles.loginButtonText}
@@ -87,7 +144,7 @@ const Signin = ({ navigation }) => {
           <View style={styles.socialLogins}>
             <Button
               height={40}
-              onPress={() => {}}
+              onPress={handleGoogleLogin}
               title="Google"
               color={theme.COLORS.WHITE}
               buttonStyle={styles.socialLoginButton}
@@ -102,7 +159,7 @@ const Signin = ({ navigation }) => {
             />
             <Button
               height={40}
-              onPress={() => {}}
+              onPress={handleFacebookLogin}
               title="Facebook"
               color={theme.COLORS.WHITE}
               buttonStyle={styles.socialLoginButton}

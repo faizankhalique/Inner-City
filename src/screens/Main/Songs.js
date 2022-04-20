@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
 import { Audio } from "expo-av";
+import firebase from "firebase";
 import Ripple from "../../components/Ripple";
+import React, { useState, useEffect } from "react";
 import { theme } from "../../services/common/theme";
 import { Text, View, StyleSheet, FlatList, Image } from "react-native";
+import { useStateValue } from "../../services/state/State";
+import { actions } from "../../services/state/Reducer";
 
-import CarParkLife from "../../../assets/icons/CarParkLife.png";
-import GeorgeFloydsLife from "../../../assets/icons/GeorgeFloydsLife.png";
-import Mbd from "../../../assets/icons/Mbd.png";
-import Mm from "../../../assets/icons/Mm.png";
-import Eminem from "../../../assets/icons/Eminem.png";
-import Miami from "../../../assets/icons/Miami.png";
+// import CarParkLife from "../../../assets/icons/CarParkLife.png";
+// import GeorgeFloydsLife from "../../../assets/icons/GeorgeFloydsLife.png";
+// import Mbd from "../../../assets/icons/Mbd.png";
+// import Mm from "../../../assets/icons/Mm.png";
+// import Eminem from "../../../assets/icons/Eminem.png";
+// import Miami from "../../../assets/icons/Miami.png";
 import SongPlaying from "../../../assets/icons/SongPlaying.png";
 import Artist from "../../../assets/icons/Artist.png";
 
@@ -17,48 +20,75 @@ const MySongs1 = require("../../../assets/images/MySongs1.png");
 const MySongs2 = require("../../../assets/images/MySongs2.png");
 const BackgroundGradient = require("../../../assets/images/MySongsGradient.png");
 
-const songs = [
-  {
-    icon: CarParkLife,
-    name: "CAR PARK LIFE",
-    artist: "XXXXXExtention01",
-    remoteUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-  },
-  {
-    icon: GeorgeFloydsLife,
-    artist: "Legacy in the Houston",
-    name: "George Floyd’s Life George Floyd’s Life George Floyd’s Life ",
-    remoteUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-  },
-  {
-    icon: Mbd,
-    name: "MBD",
-    artist: "MY BROTHER’S DREAM",
-    remoteUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-  },
-  {
-    icon: Mm,
-    name: "MM",
-    artist: "MM MACRONI !",
-    remoteUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-  },
-  {
-    icon: Eminem,
-    name: "eminem",
-    artist: "RAP GOD",
-    remoteUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
-  },
-  {
-    icon: Miami,
-    name: "#MIAMI",
-    artist: "MIAMI BASS",
-    remoteUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
-  },
-];
+// const songs = [
+//   {
+//     thumbnail: CarParkLife,
+//     name: "CAR PARK LIFE",
+//     artist: "XXXXXExtention01",
+//     song: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+//   },
+//   {
+//     thumbnail: GeorgeFloydsLife,
+//     artist: "Legacy in the Houston",
+//     name: "George Floyd’s Life",
+//     song: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+//   },
+//   {
+//     thumbnail: Mbd,
+//     name: "MBD",
+//     artist: "MY BROTHER’S DREAM",
+//     song: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+//   },
+//   {
+//     thumbnail: Mm,
+//     name: "MM",
+//     artist: "MM MACRONI !",
+//     song: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+//   },
+//   {
+//     thumbnail: Eminem,
+//     name: "Eminem",
+//     artist: "RAP GOD",
+//     song: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+//   },
+//   {
+//     thumbnail: Miami,
+//     name: "#MIAMI",
+//     artist: "MIAMI BASS",
+//     song: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+//   },
+// ];
 
 const Songs = () => {
+  const [, dispatch] = useStateValue();
+
+  const [songs, setSongs] = useState([]);
   const [song, setSong] = useState(null);
   const [sound, setSound] = useState(null);
+
+  useEffect(() => {
+    fetchSongs();
+  }, []);
+
+  const fetchSongs = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("songs")
+        .onSnapshot((querySnapshot) => {
+          const songs = [];
+          querySnapshot.forEach((s) => {
+            const song = s.data();
+            songs.push(song);
+          });
+          setSongs(songs);
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleSelectSong = async (index) => {
     if (sound) {
@@ -66,12 +96,12 @@ const Songs = () => {
     }
     setSong(index);
     const song = songs[index];
-    const { sound } = await Audio.Sound.createAsync({ uri: song.remoteUrl });
+    const { sound } = await Audio.Sound.createAsync({ uri: song.song });
     setSound(sound);
     await sound.playAsync();
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     return sound
       ? () => {
           sound.unloadAsync();
@@ -132,9 +162,9 @@ const Songs = () => {
               )}
             </View>
             <Image
-              source={item.icon}
               style={styles.icon}
               resizeMode="stretch"
+              source={{ uri: item.thumbnail }}
             />
             <View style={styles.listItemRightContainer}>
               <Text numberOfLines={1} style={styles.songName}>

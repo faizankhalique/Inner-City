@@ -97,7 +97,6 @@ const MainNavigation = () => {
         component={NewsScreen}
         options={({ navigation }) => ({
           unmountOnBlur: true,
-          headerTransparent: true,
           headerTitleStyle: styles.headerTitle,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => <BackButton navigation={navigation} />,
@@ -108,7 +107,6 @@ const MainNavigation = () => {
         component={QuotesScreen}
         options={({ navigation }) => ({
           unmountOnBlur: true,
-          headerTransparent: true,
           headerTitleStyle: styles.headerTitle,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => <BackButton navigation={navigation} />,
@@ -120,7 +118,6 @@ const MainNavigation = () => {
         options={({ navigation }) => ({
           title: "My Books",
           unmountOnBlur: true,
-          headerTransparent: true,
           headerTitleAlign: "center",
           headerTitleStyle: styles.headerTitle,
           headerLeftContainerStyle: styles.headerLeftContainer,
@@ -132,7 +129,6 @@ const MainNavigation = () => {
         component={MoviesScreen}
         options={({ navigation }) => ({
           unmountOnBlur: true,
-          headerTransparent: true,
           headerTitleStyle: styles.headerTitle,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => <BackButton navigation={navigation} />,

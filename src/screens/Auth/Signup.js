@@ -4,6 +4,7 @@ import { theme } from "../../services/common/theme";
 import Button from "../../components/Button";
 import SimpleTextField from "../../components/SimpleTextField";
 import CheckBox from "../../components/CheckBox";
+import firebase from "firebase";
 
 const SignupImg1 = require("../../../assets/images/SignupImg1.png");
 const SignupImg2 = require("../../../assets/images/SignupImg2.png");
@@ -11,13 +12,42 @@ const SignupImg3 = require("../../../assets/images/SignupImg3.png");
 const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
 
 const Signup = ({ navigation }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [firstName, setFirstName] = useState("");
+  // const [lastName, setLastName] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+
+  const [firstName, setFirstName] = useState("firstname");
+  const [lastName, setLastName] = useState("lastname");
+  const [email, setEmail] = useState("a1@gmail.com");
+  const [password, setPassword] = useState("12345678");
 
   const [enableSupport, setEnableSupport] = useState(false);
   const [agreeTAC, setAgreeTAC] = useState(false);
+
+  const handleSignup = async () => {
+    try {
+      await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((res) => {
+          if (res && res.user) {
+            res.user.updateProfile({ displayName: `${firstName} ${lastName}` });
+          }
+        })
+        .catch((error) => {
+          let errorCode = error.code;
+          let errorMessage = error.message;
+          if (errorCode == "auth/weak-password") {
+            alert("Weak Password!");
+          } else {
+            alert(errorMessage);
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -108,7 +138,7 @@ const Signup = ({ navigation }) => {
             </CheckBox>
             <Button
               height={40}
-              onPress={() => {}}
+              onPress={handleSignup}
               title="Create an Account"
               color={theme.COLORS.TANGO}
               buttonStyle={styles.button}
