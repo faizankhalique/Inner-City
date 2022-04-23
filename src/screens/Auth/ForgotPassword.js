@@ -4,13 +4,39 @@ import { theme } from "../../services/common/theme";
 import Button from "../../components/Button";
 import SimpleTextField from "../../components/SimpleTextField";
 import { LinearGradient } from "expo-linear-gradient";
+import firebase from "firebase";
+import { actions } from "../../services/state/Reducer";
+import { useStateValue } from "../../services/state/State";
 
 const ForgotPasswordImg1 = require("../../../assets/images/ForgotPasswordImg1.png");
 const ForgotPasswordImg2 = require("../../../assets/images/ForgotPasswordImg2.png");
 const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
 
 const ForgotPassword = ({ navigation }) => {
+  const [, dispatch] = useStateValue();
   const [email, setEmail] = useState("");
+
+  const handleResetPassword = async () => {
+    try {
+      if (!email) {
+        alert("Please enter email");
+        return;
+      }
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .auth()
+        .sendPasswordResetEmail(email)
+        .then(function () {
+          navigation.navigate("ResetPasswordEmailSent", { email });
+        })
+        .catch(function ({ message }) {
+          alert(message);
+        });
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+    } catch (err) {
+      console.log("handleResetPassword: ", err);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -54,7 +80,7 @@ const ForgotPassword = ({ navigation }) => {
           color={theme.COLORS.TANGO}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
-          onPress={() => navigation.navigate("ResetPasswordEmailSent")}
+          onPress={handleResetPassword}
         />
       </View>
     </View>

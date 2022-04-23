@@ -1,17 +1,24 @@
-import React, { useEffect } from "react";
-import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
+import React from "react";
+import Button from "../../components/Button";
 import { theme } from "../../services/common/theme";
 import { LinearGradient } from "expo-linear-gradient";
+import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
 
 const ResetPasswordEmailSentImg1 = require("../../../assets/images/ResetPasswordEmailSentImg1.png");
 const ResetPasswordEmailSentImg2 = require("../../../assets/images/ResetPasswordEmailSentImg2.png");
 const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
 const ResetPasswordEmailSentGradient = require("../../../assets/images/ResetPasswordEmailSentGradient.png");
 
-const ResetPasswordEmailSent = ({ navigation }) => {
-  useEffect(() => {
-    setTimeout(() => navigation.navigate("UpdatePassword"), 1500);
-  }, []);
+const ResetPasswordEmailSent = ({ navigation, route }) => {
+  // navigation.navigate("UpdatePassword")
+
+  const { params = {} } = route || {};
+  const { email = "" } = params || {};
+
+  const handleBackToLogin = () => {
+    navigation.goBack();
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>
@@ -47,8 +54,16 @@ const ResetPasswordEmailSent = ({ navigation }) => {
             <Text style={styles.checkEmailText}>Check Your Email</Text>
             <Text style={styles.emailedYouText}>
               {`We have emailed you password\nreset link at\n`}
-              <Text style={styles.email}>johndoe@email.com</Text>
+              <Text style={styles.email}>{email || ""}</Text>
             </Text>
+            <Button
+              height={40}
+              title="Back to login"
+              onPress={handleBackToLogin}
+              color={theme.COLORS.TANGO}
+              buttonStyle={styles.button}
+              textStyle={styles.buttonText}
+            />
           </View>
         </View>
       </View>
@@ -131,5 +146,16 @@ export const styles = StyleSheet.create({
   },
   email: {
     fontFamily: "InterBold700",
+  },
+  button: {
+    marginTop: 20,
+    borderRadius: 15,
+  },
+  buttonText: {
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: "center",
+    color: theme.COLORS.WHITE,
+    fontFamily: "InterMedium500",
   },
 });
