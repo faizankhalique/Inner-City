@@ -5,6 +5,8 @@ import Button from "../../components/Button";
 import SimpleTextField from "../../components/SimpleTextField";
 import CheckBox from "../../components/CheckBox";
 import firebase from "firebase";
+import { actions } from "../../services/state/Reducer";
+import { useStateValue } from "../../services/state/State";
 
 const SignupImg1 = require("../../../assets/images/SignupImg1.png");
 const SignupImg2 = require("../../../assets/images/SignupImg2.png");
@@ -12,27 +14,78 @@ const SignupImg3 = require("../../../assets/images/SignupImg3.png");
 const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
 
 const Signup = ({ navigation }) => {
-  // const [firstName, setFirstName] = useState("");
-  // const [lastName, setLastName] = useState("");
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const [, dispatch] = useStateValue();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [firstName, setFirstName] = useState("firstname");
-  const [lastName, setLastName] = useState("lastname");
-  const [email, setEmail] = useState("a1@gmail.com");
-  const [password, setPassword] = useState("12345678");
+  // const [firstName, setFirstName] = useState("firstname");
+  // const [lastName, setLastName] = useState("lastname");
+  // const [email, setEmail] = useState("a1@gmail.com");
+  // const [password, setPassword] = useState("12345678");
 
   const [enableSupport, setEnableSupport] = useState(false);
   const [agreeTAC, setAgreeTAC] = useState(false);
 
+  const updateUserInfo = async (user, profile) => {
+    try {
+      if (user) {
+        const {
+          name = "",
+          email = "",
+          picture = "",
+          gmailLink = "",
+          facebookLink = "",
+        } = profile || {};
+        await user.updateProfile({ displayName: name, photoURL: picture });
+        await user.updateEmail(email);
+        const users = await firebase.firestore().collection("users");
+        await users.doc(user.uid).set({
+          name,
+          email,
+          picture,
+          phone_number: "",
+          gmail_link: gmailLink,
+          facebook_link: facebookLink,
+        });
+      }
+    } catch (err) {
+      console.log("updateUserInfo Error:", err);
+    }
+  };
+
   const handleSignup = async () => {
     try {
+      if (!firstName) {
+        alert("Please enter first name");
+        return;
+      }
+      if (!lastName) {
+        alert("Please enter last name");
+        return;
+      }
+      if (!email) {
+        alert("Please enter email");
+        return;
+      }
+      if (!password) {
+        alert("Please enter password");
+        return;
+      }
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
       await firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then((res) => {
           if (res && res.user) {
-            res.user.updateProfile({ displayName: `${firstName} ${lastName}` });
+            updateUserInfo(res.user, {
+              name: `${firstName} ${lastName}`,
+              email,
+              picture: "",
+              gmailLink: "",
+              facebookLink: "",
+            });
           }
         })
         .catch((error) => {
@@ -44,8 +97,9 @@ const Signup = ({ navigation }) => {
             alert(errorMessage);
           }
         });
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
     } catch (err) {
-      console.log(err);
+      console.log("handleSignup: ", err);
     }
   };
 
