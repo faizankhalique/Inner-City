@@ -10,8 +10,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import firebase from "firebase";
 import { useStateValue } from "../../services/state/State";
 import { actions } from "../../services/state/Reducer";
-import { WEB_CLIENT_ID, IOS_CLIENT_ID, ANDROID_CLIENT_ID } from "@env";
+import {
+  WEB_CLIENT_ID,
+  IOS_CLIENT_ID,
+  ANDROID_CLIENT_ID,
+  FACEBOOK_APP_ID,
+} from "@env";
 import * as Google from "expo-google-app-auth";
+import * as Facebook from "expo-facebook";
 
 const SignupImg1 = require("../../../assets/images/SigninImg1.png");
 const InnerCityLogo = require("../../../assets/images/InnerCityLogo.png");
@@ -20,24 +26,44 @@ const FacebookIcon = require("../../../assets/icons/Facebook.png");
 
 const Signin = ({ navigation }) => {
   const [, dispatch] = useStateValue();
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [email, setEmail] = useState("a1@gmail.com");
-  const [password, setPassword] = useState("12345678");
+  const updateUserInfo = async (user, profile) => {
+    try {
+      if (user) {
+        const {
+          name = "",
+          email = "",
+          picture = "",
+          gmailLink = "",
+          facebookLink = "",
+        } = profile || {};
+        await user.updateProfile({ displayName: name, photoURL: picture });
+        await user.updateEmail(email);
+        const users = await firebase.firestore().collection("users");
+        await users.doc(user.uid).set({
+          name,
+          email,
+          picture,
+          phone_number: "",
+          gmail_link: gmailLink,
+          facebook_link: facebookLink,
+        });
+      }
+    } catch (err) {
+      console.log("updateUserInfo Error:", err);
+    }
+  };
 
   const handleLogin = async () => {
     dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
     await firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then((res) => {
-        if (res && res.user && res.user.uid) {
-        }
-      })
       .catch((error) => {
-        let errorCode = error.code;
-        let errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
         if (errorCode == "auth/weak-password") {
           alert("Weak Password!");
         } else {
@@ -49,6 +75,7 @@ const Signin = ({ navigation }) => {
 
   const handleGoogleLogin = async () => {
     try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
       const result = await Google.logInAsync({
         behavior: "web",
         iosClientId: IOS_CLIENT_ID,
@@ -56,27 +83,78 @@ const Signin = ({ navigation }) => {
         androidClientId: ANDROID_CLIENT_ID,
         webClientId: WEB_CLIENT_ID,
       });
-      console.log("GResult: ", result);
-
       if (result.type === "success") {
         const credential = firebase.auth.GoogleAuthProvider.credential(
           result.idToken,
           result.accessToken
         );
-
-        // const credential1 = firebase.auth.PhoneAuthProvider.credential({})
-        const googleProfileData = await firebase
-          .auth()
-          .signInWithCredential(credential);
-        console.log(googleProfileData);
-        // this.onLoginSuccess.bind(this);
+        const gpRes = await firebase.auth().signInWithCredential(credential);
+        if (
+          gpRes &&
+          gpRes.additionalUserInfo &&
+          gpRes.additionalUserInfo.isNewUser &&
+          gpRes.additionalUserInfo.profile
+        ) {
+          const {
+            name = "",
+            email = "",
+            picture = "",
+          } = gpRes.additionalUserInfo.profile;
+          await updateUserInfo(gpRes.user, {
+            name,
+            email,
+            picture,
+            gmailLink: "",
+            facebookLink: "",
+          });
+        }
       }
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
     } catch ({ message }) {
-      alert("login: Error:" + message);
+      console.log("handleGoogleLogin Error:" + message);
     }
   };
 
-  const handleFacebookLogin = async () => {};
+  const handleFacebookLogin = async () => {
+    try {
+      await Facebook.initializeAsync({ appId: FACEBOOK_APP_ID });
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile", "email"],
+      });
+      if (type === "success") {
+        await firebase
+          .auth()
+          .setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        const fbRes = await firebase.auth().signInWithCredential(credential);
+        if (
+          fbRes &&
+          fbRes.additionalUserInfo &&
+          fbRes.additionalUserInfo.isNewUser &&
+          fbRes.additionalUserInfo.profile
+        ) {
+          const {
+            name = "",
+            email = "",
+            picture = {},
+            link = "",
+          } = fbRes.additionalUserInfo.profile;
+          const { data = {} } = picture || {};
+          const { url: pictureUrl = "" } = data || {};
+          await updateUserInfo(fbRes.user, {
+            name,
+            email,
+            picture: pictureUrl,
+            gmailLink: "",
+            facebookLink: link,
+          });
+        }
+      }
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+    } catch ({ message }) {
+      console.log(`handleFacebookLogin Error: ${message}`);
+    }
+  };
 
   return (
     <View style={styles.container}>

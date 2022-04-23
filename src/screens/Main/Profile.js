@@ -1,18 +1,71 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { theme } from "../../services/common/theme";
 import { LinearGradient } from "expo-linear-gradient";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, StyleSheet, Image, Linking } from "react-native";
+import firebase from "firebase";
+import Ripple from "../../components/Ripple";
+import { actions } from "../../services/state/Reducer";
+import { useStateValue } from "../../services/state/State";
 
 const Avatar = require("../../../assets/images/Avatar.png");
 const BackgroundImg = require("../../../assets/images/GraffitiArt.png");
 const Google = require("../../../assets/icons/Google1.png");
 const Facebook = require("../../../assets/icons/Facebook1.png");
 
-import firebase from "firebase";
-
 const Profile = () => {
-  const { phoneNumber, email, displayName } =
-    firebase.auth()?.currentUser || {};
+  const [, dispatch] = useStateValue();
+  const { uid } = firebase.auth()?.currentUser || {};
+
+  const [user, setUser] = useState();
+
+  const fetchUser = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .onSnapshot((querySnapshot) => {
+          setUser(querySnapshot.data());
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log("fetchUser Error:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (uid) {
+      fetchUser();
+    }
+  }, [uid]);
+
+  const handleLogout = () => {
+    firebase.auth().signOut();
+  };
+
+  const handleOpenGmailLink = async () => {
+    if (gmailLink && (await Linking.canOpenURL(gmailLink))) {
+      Linking.openURL(gmailLink);
+    }
+  };
+
+  const handleOpenFacebookLink = async () => {
+    if (facebookLink && (await Linking.canOpenURL(facebookLink))) {
+      Linking.openURL(facebookLink);
+    }
+  };
+
+  const {
+    name = "",
+    email = "",
+    picture = "",
+    phone_number: phoneNumber = "",
+    gmail_link: gmailLink = "",
+    facebook_link: facebookLink = "",
+  } = user || {};
+
+  const userProfilePicture = picture ? { uri: picture } : Avatar;
 
   return (
     <View style={styles.container}>
@@ -28,9 +81,15 @@ const Profile = () => {
         colors={[theme.COLORS.GULF_BLUE, theme.COLORS.HORIZON]}
       />
       <View style={styles.innerContainer}>
-        <Image source={Avatar} resizeMode="stretch" style={styles.avatar} />
+        <View style={styles.profilePicContainer}>
+          <Image
+            resizeMode="cover"
+            style={styles.profilePic}
+            source={userProfilePicture}
+          />
+        </View>
 
-        <Text style={styles.name}>{displayName || ""}</Text>
+        <Text style={styles.name}>{name || ""}</Text>
 
         <View style={styles.fieldValueContainer}>
           <Text style={styles.fieldName}>Phone no:</Text>
@@ -44,27 +103,38 @@ const Profile = () => {
 
         <View style={styles.linkedAccountsContainer}>
           <Text style={styles.linkedAccountsText}>Linked Accounts</Text>
-          <Image
-            source={Google}
-            resizeMode="stretch"
-            style={styles.socialIcon}
-          />
-          <Image
-            source={Facebook}
-            resizeMode="stretch"
-            style={styles.socialIcon}
-          />
+          <View style={styles.socialIconButtonContainer}>
+            <Ripple
+              onPress={handleOpenGmailLink}
+              style={styles.socialIconButton}
+            >
+              <Image
+                source={Google}
+                resizeMode="stretch"
+                style={styles.socialIcon}
+              />
+            </Ripple>
+          </View>
+          <View style={styles.socialIconButtonContainer}>
+            <Ripple
+              style={styles.socialIconButton}
+              onPress={handleOpenFacebookLink}
+            >
+              <Image
+                source={Facebook}
+                resizeMode="stretch"
+                style={styles.socialIcon}
+              />
+            </Ripple>
+          </View>
         </View>
 
         <View style={styles.divider} />
-        <Text
-          style={styles.logoutText}
-          onPress={() => {
-            firebase.auth().signOut();
-          }}
-        >
-          Logout
-        </Text>
+        <View style={styles.logoutButtonContainer}>
+          <Ripple style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutText}>Logout</Text>
+          </Ripple>
+        </View>
       </View>
     </View>
   );
@@ -98,10 +168,14 @@ const styles = StyleSheet.create({
     paddingTop: "30%",
     paddingHorizontal: 20,
   },
-  avatar: {
+  profilePicContainer: {
+    marginVertical: 10,
+    alignSelf: "center",
+  },
+  profilePic: {
     width: 180,
     height: 180,
-    alignSelf: "center",
+    borderRadius: 100,
   },
   name: {
     fontSize: 24,
@@ -150,19 +224,35 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: theme.COLORS.WHITE,
     fontFamily: "InterBold700",
+    marginRight: 20,
+  },
+  socialIconButtonContainer: {
+    marginLeft: 10,
+  },
+  socialIconButton: {
+    padding: 10,
+    borderRadius: 30,
   },
   socialIcon: {
     width: 24,
     height: 24,
-    marginLeft: 20,
+  },
+  logoutButtonContainer: {
+    marginTop: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoutButton: {
+    borderRadius: 30,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   logoutText: {
     fontSize: 16,
     lineHeight: 19,
-    color: theme.COLORS.WHITE,
-    fontFamily: "InterBold700",
     textAlign: "center",
-    marginTop: 10,
+    fontFamily: "InterBold700",
+    color: theme.COLORS.WHITE,
   },
   divider: {
     height: 1,

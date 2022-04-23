@@ -3,10 +3,20 @@ import Button from "../../components/Button";
 import { theme } from "../../services/common/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import SimpleTextField from "../../components/SimpleTextField";
-import { View, StyleSheet, Image, Dimensions, ScrollView } from "react-native";
+import {
+  View,
+  Image,
+  Alert,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import firebase from "firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
+import FeatherIcon from "react-native-vector-icons/Feather";
+import Ripple from "../../components/Ripple";
+import { actions } from "../../services/state/Reducer";
+import { useStateValue } from "../../services/state/State";
 
 const Avatar = require("../../../assets/images/Avatar.png");
 const BackgroundImg = require("../../../assets/images/GraffitiArt.png");
@@ -14,51 +24,140 @@ const Google = require("../../../assets/icons/Google1.png");
 const Facebook = require("../../../assets/icons/Facebook1.png");
 
 const EditProfile = ({ navigation }) => {
+  const [, dispatch] = useStateValue();
+  const user = firebase.auth()?.currentUser || {};
+  const { uid } = user || {};
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [gmailLink, setGmailLink] = useState("");
   const [facebookLink, setFacebookLink] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
 
-  const user = firebase.auth()?.currentUser;
+  const fetchUser = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .onSnapshot((querySnapshot) => {
+          const userInfo = querySnapshot.data();
+          const {
+            name = "",
+            email = "",
+            picture = "",
+            phone_number: phoneNumber = "",
+            gmail_link: gmailLink = "",
+            facebook_link: facebookLink = "",
+          } = userInfo || {};
+          const fullname = name.split(" ");
+          setFirstName((fullname && fullname.length > 0 && fullname[0]) || "");
+          setLastName((fullname && fullname.length > 1 && fullname[1]) || "");
+          setEmail(email);
+          setPhoneNumber(phoneNumber);
+          setProfilePicture(picture);
+          setGmailLink(gmailLink);
+          setFacebookLink(facebookLink);
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log("fetchUser Error:", err);
+    }
+  };
 
   useEffect(() => {
-    abc();
-    const { phoneNumber, email, displayName } = user || {};
-    setFirstName(displayName.split(" ")[0]);
-    setLastName(displayName.split(" ")[1]);
-    setPhoneNumber(phoneNumber);
-    setEmail(email);
-  }, []);
+    if (uid) {
+      fetchUser();
+    }
+  }, [uid]);
 
   const handleUpdateProfile = async () => {
-    // const res = await ImagePicker.launchCameraAsync({
-    //   allowsEditing: true,
-    //   // base64: true,
-    // });
-    // // res.
-    // const response = await fetch(res.uri);
-    // const fileBlob = await response.blob();
-    // console.log(fileBlob);
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      let userProfilePicture = "";
+      if (profilePicture && profilePicture.includes("file:/")) {
+        const response = await fetch(profilePicture);
+        const blob = await response.blob();
+        userProfilePicture = await firebase
+          .storage()
+          .ref("users/" + uid)
+          .put(blob)
+          .then(function (snapshot) {
+            return snapshot.ref.getDownloadURL();
+          })
+          .then((url) => url);
+      } else {
+        userProfilePicture = profilePicture;
+      }
 
-    // const storageRef = await firebase.storage().ref("users/" + user.uid);
-    // storageRef.put();
-    // console.log(a);
-
-    user.updateProfile({
-      displayName: `${firstName} ${lastName}`,
-    });
-    // user.updatePhoneNumber(phoneNumber);
+      await user.updateProfile({
+        displayName: `${firstName} ${lastName}`,
+        photoURL: userProfilePicture,
+      });
+      await user.updateEmail(email);
+      const users = await firebase.firestore().collection("users");
+      await users.doc(uid).set({
+        name: `${firstName} ${lastName}`,
+        email,
+        picture: userProfilePicture,
+        phone_number: phoneNumber,
+        gmail_link: gmailLink,
+        facebook_link: facebookLink,
+      });
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+    } catch ({ message }) {
+      console.log("handleUpdateProfileErr:", message);
+    }
   };
 
-  const abc = async () => {
-    firebase
-      .firestore()
-      .collection("users")
-      .onSnapshot((a) => console.log(a));
-    // console.log(a);
+  const launchCamera = async () => {
+    try {
+      const launchCameraRes = await ImagePicker.launchCameraAsync({
+        quality: 0.5,
+      });
+      if (launchCameraRes && launchCameraRes.uri) {
+        setProfilePicture(launchCameraRes.uri);
+      } else {
+        setProfilePicture("");
+      }
+    } catch (err) {
+      console.log("launchCameraErr: ", err);
+    }
   };
+
+  const launchImageLibrary = async () => {
+    try {
+      const launchImageLibraryRes = await ImagePicker.launchImageLibraryAsync({
+        quality: 0.5,
+      });
+      if (launchImageLibraryRes && launchImageLibraryRes.uri) {
+        setProfilePicture(launchImageLibraryRes.uri);
+      } else {
+        setProfilePicture("");
+      }
+    } catch (err) {
+      console.log("launchImageLibraryErr: ", err);
+    }
+  };
+
+  const handleBrowseProfilePic = () => {
+    Alert.alert("Browse Profile Picture", "", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Camera",
+        onPress: launchCamera,
+      },
+      { text: "Gallery", onPress: launchImageLibrary },
+    ]);
+  };
+
+  const userProfilePicture = profilePicture ? { uri: profilePicture } : Avatar;
 
   return (
     <View style={styles.container}>
@@ -74,7 +173,21 @@ const EditProfile = ({ navigation }) => {
         colors={[theme.COLORS.GULF_BLUE, theme.COLORS.HORIZON]}
       />
       <View style={styles.innerContainer}>
-        <Image source={Avatar} resizeMode="stretch" style={styles.avatar} />
+        <View style={styles.profilePicContainer}>
+          <Image
+            resizeMode="cover"
+            style={styles.profilePic}
+            source={userProfilePicture}
+          />
+          <View style={styles.profilePicEditContainer}>
+            <Ripple
+              style={styles.profilePicEditButton}
+              onPress={handleBrowseProfilePic}
+            >
+              <FeatherIcon name="edit" size={25} color={theme.COLORS.WHITE} />
+            </Ripple>
+          </View>
+        </View>
 
         <ScrollView
           style={styles.fieldsContainer}
@@ -179,10 +292,24 @@ const styles = StyleSheet.create({
     paddingTop: "30%",
     paddingHorizontal: 20,
   },
-  avatar: {
+  profilePicContainer: {
+    marginVertical: 10,
+    alignSelf: "center",
+  },
+  profilePic: {
     width: 180,
     height: 180,
-    alignSelf: "center",
+    borderRadius: 100,
+  },
+  profilePicEditContainer: {
+    right: "2.5%",
+    bottom: "2.5%",
+    position: "absolute",
+  },
+  profilePicEditButton: {
+    padding: 10,
+    borderRadius: 30,
+    backgroundColor: theme.COLORS.GULF_BLUE,
   },
   fieldsContainer: {
     height: Dimensions.get("screen").height * 0.55,
