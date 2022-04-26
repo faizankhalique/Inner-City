@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -10,6 +10,10 @@ import {
 import Ripple from "../../../components/Ripple";
 import { theme } from "../../../services/common/theme";
 import PlayButton from "../../../components/PlayButton";
+import { useStateValue } from "../../../services/state/State";
+import { actions } from "../../../services/state/Reducer";
+import firebase from "firebase";
+import moment from "moment";
 
 const BackgroundImg = require("../../../../assets/images/BackgroundImg1.png");
 const InnerCityLogo = require("../../../../assets/images/InnerCityLogo.png");
@@ -66,7 +70,98 @@ const ImageButton = ({
 };
 
 const Games = ({ navigation }) => {
-  const [selectedGame, setSelectedGame] = useState(1);
+  const [, dispatch] = useStateValue();
+  const { uid } = firebase.auth()?.currentUser || {};
+
+  const [selectedGame, setSelectedGame] = useState(0);
+  const [rewards, setRewards] = useState([]);
+  const [user, setUser] = useState();
+
+  const fetchUser = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .onSnapshot((querySnapshot) => {
+          setUser(querySnapshot.data());
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log("fetchUser Error:", err);
+    }
+  };
+
+  const fetchRewards = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      const currentDate = moment().format("YYYY-MM-DD[T]HH:mm:ss.[000Z]");
+      await firebase
+        .firestore()
+        .collection("rewards")
+        .where("start_time", "<=", currentDate)
+        .onSnapshot((querySnapshot) => {
+          const rewards = [];
+          querySnapshot.forEach((r) => {
+            const reward = r.data();
+            if (moment(reward.end_time).isAfter(moment())) {
+              rewards.push(reward);
+            }
+          });
+          setRewards(rewards);
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log("fetchRewards Error: ", err);
+    }
+  };
+
+  useEffect(() => {
+    if (uid) {
+      fetchUser();
+    }
+  }, [uid]);
+
+  useEffect(() => {
+    fetchRewards();
+  }, []);
+
+  const handlePlayGame = async () => {
+    try {
+      if (user && user.playedGames) {
+        let game = "";
+        if (games[selectedGame].screen === "PaperFortuneTeller") {
+          game = "Paper Fortune";
+        } else if (games[selectedGame].screen === "SlotMachine") {
+          game = "Slot Machine";
+        } else if (games[selectedGame].screen === "ScratchTheLottery") {
+          game = "Scratch Lottery";
+        } else if (games[selectedGame].screen === "RollTheDice") {
+          game = "Roll Dice";
+        }
+        const isGameAlreadyPlayed =
+          user.playedGames.length > 0
+            ? !!user.playedGames.find(
+                (pg) =>
+                  pg.date === moment().format("YYYY-MM-DD") && pg.game === game
+              )
+            : false;
+        if (isGameAlreadyPlayed) {
+          alert(
+            "You have already played this game today. Please come back tomorrow to play again."
+          );
+        } else {
+          const gameRewards = rewards.filter((r) => r.game === game);
+          navigation.navigate(games[selectedGame].screen, {
+            rewards: gameRewards,
+          });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -107,9 +202,7 @@ const Games = ({ navigation }) => {
               ))}
             </ScrollView>
           </View>
-          <PlayButton
-            onPress={() => navigation.navigate(games[selectedGame].screen)}
-          />
+          <PlayButton onPress={handlePlayGame} />
         </View>
       </View>
     </View>

@@ -38,6 +38,10 @@ const Welcome = () => {
           name,
           email,
           picture,
+          rewards: [],
+          playedGames: [
+            { game: "Roll Dice", date: "2022-04-20T17:44:19.663Z" },
+          ],
           phone_number: "",
           gmail_link: gmailLink,
           facebook_link: facebookLink,

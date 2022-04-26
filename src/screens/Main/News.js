@@ -31,12 +31,32 @@ import firebase from "firebase";
 
 const News = () => {
   const [, dispatch] = useStateValue();
+  const { uid } = firebase.auth()?.currentUser || {};
 
+  const [user, setUser] = useState();
   const [news, setNews] = useState([]);
 
+  const fetchUser = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .onSnapshot((querySnapshot) => {
+          setUser(querySnapshot.data());
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log("fetchUser Error:", err);
+    }
+  };
+
   useEffect(() => {
-    fetchNews();
-  }, []);
+    if (uid) {
+      fetchUser();
+    }
+  }, [uid]);
 
   const fetchNews = async () => {
     try {
@@ -44,6 +64,7 @@ const News = () => {
       await firebase
         .firestore()
         .collection("news")
+        .where(firebase.firestore.FieldPath.documentId(), "in", user.rewards)
         .onSnapshot((querySnapshot) => {
           const newss = [];
           querySnapshot.forEach((n) => {
@@ -57,6 +78,12 @@ const News = () => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (user && user.rewards && user.rewards.length > 0) {
+      fetchNews();
+    }
+  }, [user]);
 
   return (
     <View style={styles.container}>

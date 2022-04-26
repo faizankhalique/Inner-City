@@ -9,6 +9,10 @@ import Animated, {
   withRepeat,
   withSequence,
 } from "react-native-reanimated";
+import { useStateValue } from "../../../../services/state/State";
+import { actions } from "../../../../services/state/Reducer";
+import firebase from "firebase";
+import moment from "moment";
 
 const DiceFace1 = require("../../../../../assets/icons/DiceFace1.png");
 const DiceFace2 = require("../../../../../assets/icons/DiceFace2.png");
@@ -24,8 +28,39 @@ const RollTheDiceGame = require("../../../../../assets/images/RollTheDiceGame.pn
 const RollTheDiceBackground = require("../../../../../assets/images/RollTheDiceBackground.jpeg");
 const Sound = require("../../../../../assets/icons/Sound.png");
 
-const RollTheDice = ({ navigation }) => {
+const RollTheDice = ({ navigation, route }) => {
+  const { params = {} } = route || {};
+  const { rewards = [] } = params || {};
+
+  const [, dispatch] = useStateValue();
+  const { uid } = firebase.auth()?.currentUser || {};
+
+  const [user, setUser] = useState();
+
+  const fetchUser = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .onSnapshot((querySnapshot) => {
+          setUser(querySnapshot.data());
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log("fetchUser Error:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (uid) {
+      fetchUser();
+    }
+  }, [uid]);
+
   const [showDiceRolling, setShowDiceRolling] = useState(false);
+  const [showPrizeButton, setShowPrizeButton] = useState(false);
 
   const [diceValue1, setDiceValue1] = useState(1);
   const [diceValue2, setDiceValue2] = useState(1);
@@ -56,11 +91,43 @@ const RollTheDice = ({ navigation }) => {
       setTimeout(() => {
         clearInterval(interval);
       }, 1200);
+      setTimeout(() => {
+        setShowPrizeButton(true);
+      }, 1300);
     }, 500);
   };
 
-  const handleShowPrize = () => {
-    navigation.navigate("PrizeWon");
+  const handleShowPrize = async () => {
+    try {
+      if (!(rewards && rewards.length > 0)) {
+        alert("Oops, No rewards available yet.");
+      } else {
+        dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+        const updatedUser = { ...user };
+        const playedGame = {
+          date: moment().format("YYYY-MM-DD"),
+          game: "Roll Dice",
+        };
+        updatedUser.playedGames = [...user.playedGames, playedGame];
+
+        const rewardIndex = Math.round(Math.random() * (rewards.length - 1));
+        const givenReward = rewards[rewardIndex];
+
+        updatedUser.rewards = [...user.rewards, givenReward.reward];
+
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(uid)
+          .set(updatedUser);
+
+        dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+
+        navigation.navigate("PrizeWon", { reward: givenReward });
+      }
+    } catch (err) {
+      console.log("fetchRewards Error: ", err);
+    }
   };
 
   const getFace = (diceValue) => {
@@ -147,7 +214,9 @@ const RollTheDice = ({ navigation }) => {
                     </Animated.View>
                   </ImageBackground>
                 </View>
-                <PlayButton title="View Prize" onPress={handleShowPrize} />
+                {showPrizeButton && (
+                  <PlayButton title="View Prize" onPress={handleShowPrize} />
+                )}
               </>
             </>
           )}

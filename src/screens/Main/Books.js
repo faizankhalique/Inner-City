@@ -74,14 +74,40 @@ const RecentUsedBook3 = require("../../../assets/images/RecentUsedBook3.png");
 
 const Books = () => {
   const [, dispatch] = useStateValue();
+  const { uid } = firebase.auth()?.currentUser || {};
 
+  const [user, setUser] = useState();
   const [popularNowBooks, setPopularNowBooks] = useState([]);
   const [trendingNowBooks, setTrendingNowBooks] = useState([]);
   const [recentlyReadBooks, setRecentlyReadBooks] = useState([]);
 
+  const fetchUser = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .onSnapshot((querySnapshot) => {
+          setUser(querySnapshot.data());
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log("fetchUser Error:", err);
+    }
+  };
+
   useEffect(() => {
-    fetchBooks();
-  }, []);
+    if (uid) {
+      fetchUser();
+    }
+  }, [uid]);
+
+  useEffect(() => {
+    if (user && user.rewards && user.rewards.length > 0) {
+      fetchBooks();
+    }
+  }, [user]);
 
   const fetchBooks = async () => {
     try {
@@ -89,6 +115,7 @@ const Books = () => {
       await firebase
         .firestore()
         .collection("books")
+        .where(firebase.firestore.FieldPath.documentId(), "in", user.rewards)
         .onSnapshot((querySnapshot) => {
           const books = [];
           querySnapshot.forEach((b) => {

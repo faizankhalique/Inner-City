@@ -45,6 +45,8 @@ const Signup = ({ navigation }) => {
           name,
           email,
           picture,
+          rewards: [],
+          playedGames: [],
           phone_number: "",
           gmail_link: gmailLink,
           facebook_link: facebookLink,

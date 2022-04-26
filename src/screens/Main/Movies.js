@@ -18,98 +18,6 @@ import { useStateValue } from "../../services/state/State";
 import firebase from "firebase";
 import moment from "moment";
 
-const Soul = require("../../../assets/images/Soul.png");
-const ReadyPlayerOne = require("../../../assets/images/ReadyPlayerOne.png");
-const EnolaHolmes = require("../../../assets/images/EnolaHolmes.png");
-const NowYouSeeMe2 = require("../../../assets/images/NowYouSeeMe2.png");
-const BirdsOfPrey = require("../../../assets/images/BirdsOfPrey.png");
-const Mulan = require("../../../assets/images/Mulan.png");
-const Onward = require("../../../assets/images/Onward.png");
-const KnivesOut = require("../../../assets/images/KnivesOut.png");
-
-// const movies = [
-//   {
-//     name: "Soul",
-//     release_year: "2020",
-//     thumbnail: Soul,
-//     type: "Drama",
-//     director: "Kimo Stamboel",
-//     writer: "Joko Anwar",
-//     duration: 99,
-//     rating: "D (17+)",
-//   },
-//   {
-//     name: "Knives Out",
-//     release_year: "2019",
-//     thumbnail: KnivesOut,
-//     type: "Drama",
-//     director: "de",
-//     writer: "Joko Anwar",
-//     duration: 99,
-//     rating: "D (17+)",
-//   },
-//   {
-//     name: "Onward",
-//     release_year: "2020",
-//     thumbnail: Onward,
-//     type: "Drama",
-//     director: "Kimo Stamboel",
-//     writer: "Joko Anwar",
-//     duration: 99,
-//     rating: "D (17+)",
-//   },
-//   {
-//     name: "Mulan",
-//     release_year: "2020",
-//     thumbnail: Mulan,
-//     type: "Drama",
-//     director: "Kimo Stamboel",
-//     writer: "Joko Anwar",
-//     duration: 99,
-//     rating: "D (17+)",
-//   },
-//   {
-//     name: "Birds of Prey",
-//     release_year: "2020",
-//     thumbnail: BirdsOfPrey,
-//     type: "Drama",
-//     director: "Kimo Stamboel",
-//     writer: "Joko Anwar",
-//     duration: 99,
-//     rating: "D (17+)",
-//   },
-//   {
-//     name: "Now You See Me 2",
-//     release_year: "2016",
-//     thumbnail: NowYouSeeMe2,
-//     type: "Drama",
-//     director: "Kimo Stamboel",
-//     writer: "Joko Anwar",
-//     duration: 99,
-//     rating: "D (17+)",
-//   },
-//   {
-//     name: "Enola Holmes",
-//     release_year: "2020",
-//     thumbnail: EnolaHolmes,
-//     type: "Drama",
-//     director: "Kimo Stamboel",
-//     writer: "Joko Anwar",
-//     duration: 99,
-//     rating: "D (17+)",
-//   },
-//   {
-//     name: "Ready Player One",
-//     release_year: "2018",
-//     thumbnail: ReadyPlayerOne,
-//     type: "Drama",
-//     director: "Kimo Stamboel",
-//     writer: "Joko Anwar",
-//     duration: 99,
-//     rating: "D (17+)",
-//   },
-// ];
-
 const MovieInfoModal = ({ open = false, movie = {}, onClose = () => {} }) => {
   const getFormattedTime = (duration) => {
     if (duration) {
@@ -190,35 +98,64 @@ const MovieInfoModal = ({ open = false, movie = {}, onClose = () => {} }) => {
 
 const Movies = () => {
   const [, dispatch] = useStateValue();
+  const { uid } = firebase.auth()?.currentUser || {};
 
+  const [user, setUser] = useState();
   const [movies, setMovies] = useState([]);
 
   const [openInfoModal, setOpenInfoModal] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(false);
 
-  useEffect(() => {
-    fetchMovies();
-  }, []);
-
-  const fetchMovies = async () => {
+  const fetchUser = async () => {
     try {
       dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
       await firebase
         .firestore()
-        .collection("movies")
+        .collection("users")
+        .doc(uid)
         .onSnapshot((querySnapshot) => {
-          const movies = [];
-          querySnapshot.forEach((m) => {
-            const movie = m.data();
-            movies.push(movie);
-          });
-          setMovies(movies);
+          setUser(querySnapshot.data());
           dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
         });
+    } catch (err) {
+      console.log("fetchUser Error:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (uid) {
+      fetchUser();
+    }
+  }, [uid]);
+
+  const fetchMovies = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      if (user && user.rewards && user.rewards.length > 0) {
+        await firebase
+          .firestore()
+          .collection("movies")
+          .where(firebase.firestore.FieldPath.documentId(), "in", user.rewards)
+          .onSnapshot((querySnapshot) => {
+            const movies = [];
+            querySnapshot.forEach((m) => {
+              const movie = m.data();
+              movies.push(movie);
+            });
+            setMovies(movies);
+          });
+      }
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
     } catch (err) {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (user && user.rewards && user.rewards.length > 0) {
+      fetchMovies();
+    }
+  }, [user]);
 
   const handleOpenMovieInfoModal = (movie) => {
     setSelectedMovie(movie);
@@ -276,7 +213,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: "3%",
-    alignItems: "center",
   },
   listContentContainer: {
     paddingBottom: "10%",
