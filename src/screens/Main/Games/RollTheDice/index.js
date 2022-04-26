@@ -9,10 +9,13 @@ import Animated, {
   withRepeat,
   withSequence,
 } from "react-native-reanimated";
+<<<<<<< HEAD
 import { useStateValue } from "../../../../services/state/State";
 import { actions } from "../../../../services/state/Reducer";
 import firebase from "firebase";
 import moment from "moment";
+=======
+>>>>>>> 25eec82fce633d3abd3ac85def083e297f69d755
 
 const DiceFace1 = require("../../../../../assets/icons/DiceFace1.png");
 const DiceFace2 = require("../../../../../assets/icons/DiceFace2.png");
@@ -28,6 +31,7 @@ const RollTheDiceGame = require("../../../../../assets/images/RollTheDiceGame.pn
 const RollTheDiceBackground = require("../../../../../assets/images/RollTheDiceBackground.jpeg");
 const Sound = require("../../../../../assets/icons/Sound.png");
 
+<<<<<<< HEAD
 const RollTheDice = ({ navigation, route }) => {
   const { params = {} } = route || {};
   const { rewards = [] } = params || {};
@@ -61,6 +65,10 @@ const RollTheDice = ({ navigation, route }) => {
 
   const [showDiceRolling, setShowDiceRolling] = useState(false);
   const [showPrizeButton, setShowPrizeButton] = useState(false);
+=======
+const RollTheDice = ({ navigation }) => {
+  const [showDiceRolling, setShowDiceRolling] = useState(false);
+>>>>>>> 25eec82fce633d3abd3ac85def083e297f69d755
 
   const [diceValue1, setDiceValue1] = useState(1);
   const [diceValue2, setDiceValue2] = useState(1);
@@ -214,9 +222,13 @@ const RollTheDice = ({ navigation, route }) => {
                     </Animated.View>
                   </ImageBackground>
                 </View>
+<<<<<<< HEAD
                 {showPrizeButton && (
                   <PlayButton title="View Prize" onPress={handleShowPrize} />
                 )}
+=======
+                <PlayButton title="View Prize" onPress={handleShowPrize} />
+>>>>>>> 25eec82fce633d3abd3ac85def083e297f69d755
               </>
             </>
           )}
