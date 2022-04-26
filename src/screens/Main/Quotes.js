@@ -32,13 +32,33 @@ import firebase from "firebase";
 
 const Quotes = () => {
   const [, dispatch] = useStateValue();
+  const { uid } = firebase.auth()?.currentUser || {};
 
+  const [user, setUser] = useState();
   const [quotes, setQuotes] = useState([]);
   const [expandedItemIndex, setExpandedItemIndex] = useState(0);
 
+  const fetchUser = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .onSnapshot((querySnapshot) => {
+          setUser(querySnapshot.data());
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log("fetchUser Error:", err);
+    }
+  };
+
   useEffect(() => {
-    fetchQuotes();
-  }, []);
+    if (uid) {
+      fetchUser();
+    }
+  }, [uid]);
 
   const fetchQuotes = async () => {
     try {
@@ -46,6 +66,7 @@ const Quotes = () => {
       await firebase
         .firestore()
         .collection("quotes")
+        .where(firebase.firestore.FieldPath.documentId(), "in", user.rewards)
         .onSnapshot((querySnapshot) => {
           const quotes = [];
           querySnapshot.forEach((q) => {
@@ -59,6 +80,12 @@ const Quotes = () => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (user && user.rewards && user.rewards.length > 0) {
+      fetchQuotes();
+    }
+  }, [user]);
 
   return (
     <View style={styles.container}>

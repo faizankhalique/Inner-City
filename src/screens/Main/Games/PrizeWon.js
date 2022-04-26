@@ -1,16 +1,31 @@
 import React from "react";
 import { theme } from "../../../services/common/theme";
 import { Text, View, StyleSheet, Image, ImageBackground } from "react-native";
+import firebase from "firebase";
+import PlayButton from "../../../components/PlayButton";
 
 const BackgroundImg = require("../../../../assets/images/BackgroundImg1.png");
-const InnerCityLogo = require("../../../../assets/images/InnerCityLogo.png");
 const ModalGradient = require("../../../../assets/images/ModalGradient.png");
 const PrizeStars = require("../../../../assets/images/PrizeStars.png");
 const TopPrizeTicket = require("../../../../assets/images/TopPrizeTicket.png");
 
 const Sound = require("../../../../assets/icons/Sound.png");
 
-const PrizeWon = () => {
+const PrizeWon = ({ navigation, route }) => {
+  const { params = {} } = route || {};
+  const { reward = [] } = params || {};
+
+  const { displayName } = firebase.auth()?.currentUser || {};
+
+  const { reward_type = "" } = reward || {};
+
+  const handleGoBack = () => {
+    navigation.navigate("Dashboard");
+  };
+
+  // Name of Singer
+  const winText = "";
+
   return (
     <View style={styles.container}>
       <Image
@@ -45,11 +60,12 @@ const PrizeWon = () => {
             </View>
             <Text style={styles.hurrahText}>Hurrah!!</Text>
             <Text style={styles.wonSongOfDayText}>
-              You have won a song of the day !!
+              You have won a {reward_type} of the day !!
             </Text>
-            <Text style={styles.winByText}>Just Win By Jeezy</Text>
-            <Text style={styles.singerNameText}>Name Of Singer</Text>
+            <Text style={styles.winByText}>Just Win By {displayName}</Text>
+            <Text style={styles.singerNameText}>{winText}</Text>
           </View>
+          <PlayButton title="Go Back" onPress={handleGoBack} />
         </View>
       </View>
     </View>

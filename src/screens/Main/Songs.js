@@ -61,14 +61,34 @@ const BackgroundGradient = require("../../../assets/images/MySongsGradient.png")
 
 const Songs = () => {
   const [, dispatch] = useStateValue();
+  const { uid } = firebase.auth()?.currentUser || {};
 
+  const [user, setUser] = useState();
   const [songs, setSongs] = useState([]);
   const [song, setSong] = useState(null);
   const [sound, setSound] = useState(null);
 
+  const fetchUser = async () => {
+    try {
+      dispatch({ type: actions.SET_SHOW_LOADER, showLoader: true });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(uid)
+        .onSnapshot((querySnapshot) => {
+          setUser(querySnapshot.data());
+          dispatch({ type: actions.SET_SHOW_LOADER, showLoader: false });
+        });
+    } catch (err) {
+      console.log("fetchUser Error:", err);
+    }
+  };
+
   useEffect(() => {
-    fetchSongs();
-  }, []);
+    if (uid) {
+      fetchUser();
+    }
+  }, [uid]);
 
   const fetchSongs = async () => {
     try {
@@ -76,6 +96,7 @@ const Songs = () => {
       await firebase
         .firestore()
         .collection("songs")
+        .where(firebase.firestore.FieldPath.documentId(), "in", user.rewards)
         .onSnapshot((querySnapshot) => {
           const songs = [];
           querySnapshot.forEach((s) => {
@@ -89,6 +110,12 @@ const Songs = () => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (user && user.rewards && user.rewards.length > 0) {
+      fetchSongs();
+    }
+  }, [user]);
 
   const handleSelectSong = async (index) => {
     if (sound) {
